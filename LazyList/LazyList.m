@@ -8,10 +8,18 @@ GeneralUtilities`SetUsage[LazyList,
     "LazyList[expr$] create a lazy list object."
 ];
 
+LazyList::cons="Invalid constructor `1`.";
+
 SetAttributes[LazyList,HoldFirst];
 
 Begin["`Private`"];
 
+$registry={};
+
+SetAttributes[constructor,HoldAll];
+constructor[e_]:=GeneralUtilities`ThrowFailure[LazyList::cons,HoldForm@e]
+
+LazyList[e_]:=GeneralUtilities`CatchFailure@constructor[e]
 LazyList[]:=LazyList[{}]
 
 (** Default methods **)
