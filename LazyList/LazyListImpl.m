@@ -2,3 +2,4 @@
 Package["LazyListImpl`"]
 
 PackageImport["GeneralUtilities`"]
+PackageImport["LazyList`"]

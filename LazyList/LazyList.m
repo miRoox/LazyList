@@ -27,10 +27,12 @@ LazyList/:AllTrue[l:LazyList[_],test_]:=Fold[And,test/@l]
 LazyList/:AnyTrue[l:LazyList[_],test_]:=Fold[Or,test/@l]
 LazyList/:NoneTrue[l:LazyList[_],test_]:=Fold[And,Not@*test/@l]
 
+loadImpl[]/;$loading=!=True:=Block[{$loading=True},Get["LazyListImpl`"]]
+
 End[]; (* `Private` *)
 
 Protect[LazyList]
 
-Get["LazyListImpl`"];
-
 EndPackage[]
+
+loadImpl[];
