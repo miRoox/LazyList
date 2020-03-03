@@ -23,9 +23,9 @@ LazyList/:Part[l:LazyList[_],i_Integer]:=Part[Normal[l],i]
 LazyList/:First[l:LazyList[_],def_]:=First[Normal[l],def]
 LazyList/:Last[l:LazyList[_],def_]:=Last[Normal[l],def]
 LazyList/:Extract[l:LazyList[_],i_]:=Extract[Normal[l],i]
-LazyList/:AllTrue[l:LazyList[_],test_]:=Normal@Fold[And,test/@l]
-LazyList/:AnyTrue[l:LazyList[_],test_]:=Normal@Fold[Or,test/@l]
-LazyList/:NoneTrue[l:LazyList[_],test_]:=Normal@Fold[And,Not@*test/@l]
+LazyList/:AllTrue[l:LazyList[_],test_]:=Fold[And,test/@l]
+LazyList/:AnyTrue[l:LazyList[_],test_]:=Fold[Or,test/@l]
+LazyList/:NoneTrue[l:LazyList[_],test_]:=Fold[And,Not@*test/@l]
 
 End[]; (* `Private` *)
 
