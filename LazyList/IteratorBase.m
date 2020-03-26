@@ -1,0 +1,92 @@
+(* Mathematica Package *)
+
+BeginPackage["LazyList`IteratorBase`"];
+
+Unprotect[
+  Iterator,
+  CreateIterator,
+  DeclareIterator,
+  $IteratorSelf,
+  $IteratorData,
+  $IteratorType
+];
+
+GeneralUtilities`SetUsage[Iterator,
+  "Iterator[type$, data$] represents a iterator object."
+];
+GeneralUtilities`SetUsage[CreateIterator,
+  "CreateIterator[expr$] creates a new iterator object from expr$.",
+  "CreateIterator[type$, data$] creates a new iterator object."
+];
+GeneralUtilities`SetUsage[DeclareIterator,
+  "DeclareIterator[type$, data$, impl$] declares a new iterator type$."
+];
+GeneralUtilities`SetUsage[IteratorTraitInfo,
+  "IteratorTraitInfo[] gives all iterator traits name.",
+  "IteratorTraitInfo[trait$] show the infomation about trait$."
+]
+
+$IteratorSelf::usage="$IteratorSelf is a placeholder for the iterator itself.";
+$IteratorType::usage="$IteratorType is a placeholder for the type of the iterator itself.";
+$IteratorData::usage="$IteratorData is a placeholder to access the data of the iterator itself.";
+
+SetAttributes[Iterator, HoldRest];
+SetAttributes[CreateIterator, HoldAll];
+
+IteratorTraitInfo::trait="Unknown trait named `1`.";
+
+Begin["`Private`"];
+
+$traits = <|
+  "Base" -> <|
+    "Deps" -> {},
+    "Info" -> "Base trait for all iterators.",
+    "Methods" -> <|
+      "Next" -> Undefined,
+      "SizeHint" -> (Interval[{0,Infinity}]&),
+      "Collect" -> (defaultCollect[$IteratorSelf]&)
+    |>
+  |>,
+  "Copyable" -> <|
+    "Deps" -> {},
+    "Info" -> "Copyable iterators.",
+    "Methods" -> <|
+      "Copy" -> (Module[{data=$IteratorData}, Iterator[$IteratorType, data]]&)
+    |>
+  |>
+|>;
+
+defaultCollect[iter_Iterator]:=Block[
+  {bag=Internal`Bag[],next},
+  While[
+    next=iter@"Next"[];
+    next!=Nothing,
+    Internal`StuffBag[bag,next]
+  ];
+  Internal`BagPart[bag,All]
+]
+
+IteratorTraitInfo[]:=Keys[$traits]
+IteratorTraitInfo[trait_]:=GeneralUtilities`CatchFailureAndMessage[
+  Lookup[$traits, trait,
+    GeneralUtilities`ThrowFailure[IteratorTraitInfo::trait, trait]
+  ][["Info"]]
+]
+
+iter_Iterator[method_String]:=iter@method[]
+
+DeclareIterator[type_String, data_, impl_]:=GeneralUtilities`CatchFailureAndMessage[
+]
+
+End[]; (* `Private` *)
+
+Protect[
+  Iterator,
+  CreateIterator,
+  DeclareIterator,
+  $IteratorSelf,
+  $IteratorData,
+  $IteratorType
+];
+
+EndPackage[]
