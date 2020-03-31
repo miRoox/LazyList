@@ -5,10 +5,10 @@ BeginPackage["LazyList`", {"GeneralUtilities`"}];
 Unprotect[LazyList,ExtendLazyList]
 
 GeneralUtilities`SetUsage[LazyList,
-    "LazyList[expr$] create a lazy list object."
+  "LazyList[expr$] create a lazy list object."
 ];
 GeneralUtilities`SetUsage[ExtendLazyList,
-    "ExtendLazyList[type$, cons$, methods$] extend lazy list type."
+  "ExtendLazyList[type$, cons$, methods$] extend lazy list type."
 ];
 
 LazyList::cons="Invalid constructor `1`.";
@@ -32,12 +32,12 @@ LazyList[e_]:=GeneralUtilities`CatchFailure@constructor[e]
 LazyList[]:=LazyList[{}]
 
 ExtendLazyList[typespec_,cons_,methods_]:=GeneralUtilities`CatchFailure@Block[
-    {type,rule,constmt,methodstmt},
-    {type,rule}=parseTypeSpec[typespec];
-    constmt=expandConstructors[cons,rule,type];
-    methodstmt=expandMethods[methods,rule,type];
-    ReleaseHold[constmt];
-    ReleaseHold[methodstmt];
+  {type,rule,constmt,methodstmt},
+  {type,rule}=parseTypeSpec[typespec];
+  constmt=expandConstructors[cons,rule,type];
+  methodstmt=expandMethods[methods,rule,type];
+  ReleaseHold[constmt];
+  ReleaseHold[methodstmt];
 ]
 
 SetAttributes[parseTypeSpec,HoldAll];
@@ -49,11 +49,11 @@ parseTypeSpec[spec_]:=GeneralUtilities`ThrowFailure[ExtendLazyList::type,spec]
 
 SetAttributes[expandConstructors,HoldFirst];
 expandConstructors[cons:SetDelayed[lhs_,rhs_],rule_,type_]:=With[
-    {e=Hold@SetDelayed[constructor[lhs],rhs]/.rule},
-    If[MatchQ[e, Hold@SetDelayed[_, LazyList[type[___]]]],
-        e,
-        GeneralUtilities`ThrowFailure[ExtendLazyList::consrhs,HoldForm[cons],HoldForm[rhs]]
-    ]
+  {e=Hold@SetDelayed[constructor[lhs],rhs]/.rule},
+  If[MatchQ[e, Hold@SetDelayed[_, LazyList[type[___]]]],
+    e,
+    GeneralUtilities`ThrowFailure[ExtendLazyList::consrhs,HoldForm[cons],HoldForm[rhs]]
+  ]
 ]
 expandConstructors[cons_List,rule_,type_]:=expandConstructors[#,rule,type]&/@cons
 expandConstructors[cons_,_,_]:=GeneralUtilities`ThrowFailure[ExtendLazyList::cons,HoldForm[cons]]
