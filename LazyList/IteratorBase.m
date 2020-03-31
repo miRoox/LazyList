@@ -22,6 +22,14 @@ Begin["`Private`"];
 
 iter_Iterator[method_String]:=iter@method[]
 
+CreateIterator[type_, args___]:=Module[{$data},
+  Block[{iter=Iterator[type, $data]},
+    iter@"__init__"[];
+    iter@"Setup"[args];
+    iter
+  ]
+]
+
 End[]; (* `Private` *)
 
 Protect[
@@ -62,15 +70,23 @@ $traits = <|
     "Info" -> "Base trait for all iterators.",
     "Methods" -> <|
       "Next" -> Undefined,
-      "SizeHint" -> (Interval[{0,Infinity}]&),
-      "Collect" -> (defaultCollect[$IteratorSelf]&)
+      "SizeHint" -> Function[{}, Interval[{0,Infinity}]],
+      "Collect" -> Function[{}, defaultCollect[$IteratorSelf]]
+    |>
+  |>,
+  "Constructor" -> <|
+    "Deps" -> {},
+    "Info" -> "Iterator constructor.",
+    "Methods" -> <|
+      "__init__" -> Automatic,
+      "Setup" -> (Null&) (* allow any number of parameters *)
     |>
   |>,
   "Copyable" -> <|
     "Deps" -> {},
     "Info" -> "Copyable iterators.",
     "Methods" -> <|
-      "Copy" -> (Module[{data=$IteratorData}, Iterator[$IteratorType, data]]&)
+      "Copy" -> Function[{}, Module[{$data=$IteratorData}, Iterator[$IteratorType, $data]]]
     |>
   |>
 |>;
