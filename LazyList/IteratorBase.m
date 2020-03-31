@@ -1,14 +1,10 @@
 (* Mathematica Package *)
 
-BeginPackage["LazyList`IteratorBase`"];
+BeginPackage["LazyList`"];
 
 Unprotect[
   Iterator,
-  CreateIterator,
-  DeclareIterator,
-  $IteratorSelf,
-  $IteratorData,
-  $IteratorType
+  CreateIterator
 ];
 
 GeneralUtilities`SetUsage[Iterator,
@@ -16,8 +12,34 @@ GeneralUtilities`SetUsage[Iterator,
 ];
 GeneralUtilities`SetUsage[CreateIterator,
   "CreateIterator[expr$] creates a new iterator object from expr$.",
-  "CreateIterator[type$, data$] creates a new iterator object."
+  "CreateIterator[type$, args$$] creates a new iterator object."
 ];
+
+SetAttributes[Iterator, HoldRest];
+SetAttributes[CreateIterator, HoldAll];
+
+Begin["`Private`"];
+
+iter_Iterator[method_String]:=iter@method[]
+
+End[]; (* `Private` *)
+
+Protect[
+  Iterator,
+  CreateIterator
+];
+
+EndPackage[] (* LazyList` *)
+
+BeginPackage["LazyList`IteratorBase`", {"LazyList`"}];
+
+Unprotect[
+  DeclareIterator,
+  $IteratorSelf,
+  $IteratorData,
+  $IteratorType
+];
+
 GeneralUtilities`SetUsage[DeclareIterator,
   "DeclareIterator[type$, data$, impl$] declares a new iterator type$."
 ];
@@ -29,9 +51,6 @@ GeneralUtilities`SetUsage[IteratorTraitInfo,
 $IteratorSelf::usage="$IteratorSelf is a placeholder for the iterator itself.";
 $IteratorType::usage="$IteratorType is a placeholder for the type of the iterator itself.";
 $IteratorData::usage="$IteratorData is a placeholder to access the data of the iterator itself.";
-
-SetAttributes[Iterator, HoldRest];
-SetAttributes[CreateIterator, HoldAll];
 
 IteratorTraitInfo::trait="Unknown trait named `1`.";
 
@@ -73,20 +92,16 @@ IteratorTraitInfo[trait_]:=GeneralUtilities`CatchFailureAndMessage[
   ][["Info"]]
 ]
 
-iter_Iterator[method_String]:=iter@method[]
-
-DeclareIterator[type_String, data_, impl_]:=GeneralUtilities`CatchFailureAndMessage[
+DeclareIterator[type_String, data_Association, impl_Association]:=GeneralUtilities`CatchFailureAndMessage[
 ]
 
 End[]; (* `Private` *)
 
 Protect[
-  Iterator,
-  CreateIterator,
   DeclareIterator,
   $IteratorSelf,
   $IteratorData,
   $IteratorType
 ];
 
-EndPackage[]
+EndPackage[] (* LazyList`IteratorBase` *)
