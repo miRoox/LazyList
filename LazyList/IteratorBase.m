@@ -60,6 +60,7 @@ $IteratorSelf::usage="$IteratorSelf is a placeholder for the iterator itself.";
 $IteratorType::usage="$IteratorType is a placeholder for the type of the iterator itself.";
 $IteratorData::usage="$IteratorData is a placeholder to access the data of the iterator itself.";
 
+DeclareIterator::trait="Unknown trait named `1`.";
 IteratorTraitInfo::trait="Unknown trait named `1`.";
 
 Begin["`Private`"];
@@ -109,6 +110,24 @@ IteratorTraitInfo[trait_]:=GeneralUtilities`CatchFailureAndMessage[
 ]
 
 DeclareIterator[type_String, data_Association, impl_Association]:=GeneralUtilities`CatchFailureAndMessage[
+  GeneralUtilities`Scope[
+    traits = resolveDependencies[Keys@impl];
+  ]
+]
+
+resolveDependencies[traits_List]:=GeneralUtilities`Scope[
+  deps={};
+  Do[
+    dep=Lookup[$traits, trait,
+      GeneralUtilities`ThrowFailure[DeclareIterator::trait, trait]
+    ][["Deps"]];
+    If[dep=={},
+      AppendTo[deps,trait->None],
+      deps=Join[deps,Thread[trait->dep]]
+    ],
+    {trait, traits}
+  ];
+  TopologicalSort[deps]//Most//Reverse
 ]
 
 End[]; (* `Private` *)
