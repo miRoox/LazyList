@@ -4,7 +4,8 @@ BeginPackage["LazyList`"];
 
 Unprotect[
   Iterator,
-  CreateIterator
+  CreateIterator,
+  IteratorTypeQ
 ];
 
 GeneralUtilities`SetUsage[Iterator,
@@ -14,6 +15,10 @@ GeneralUtilities`SetUsage[CreateIterator,
   "CreateIterator[expr$] creates a new iterator object from expr$.",
   "CreateIterator[type$, args$$] creates a new iterator object."
 ];
+GeneralUtilities`SetUsage[IteratorTypeQ,
+  "IteratorTypeQ[iter$, type$] returns True if iter$ is an iterator of the type$, and return False otherwise.",
+  "IteratorTypeQ[type$] represents an operator form of IteratorTypeQ that can be applied to an expression."
+]
 
 SetAttributes[Iterator, HoldRest];
 SetAttributes[CreateIterator, HoldAll];
@@ -30,11 +35,17 @@ CreateIterator[type_, args___]:=Module[{$data},
   ]
 ]
 
+IteratorTypeQ[Iterator[type_,_], type_]:=True
+IteratorTypeQ[Iterator[type_[___],_], type_]:=True
+IteratorTypeQ[_, _]:=False
+IteratorTypeQ[type_][e_]:=IteratorTypeQ[e,type]
+
 End[]; (* `Private` *)
 
 Protect[
   Iterator,
-  CreateIterator
+  CreateIterator,
+  IteratorTypeQ
 ];
 
 EndPackage[] (* LazyList` *)
