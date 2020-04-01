@@ -61,6 +61,8 @@ $IteratorType::usage="$IteratorType is a placeholder for the type of the iterato
 $IteratorData::usage="$IteratorData is a placeholder to access the data of the iterator itself.";
 
 DeclareIterator::trait="Unknown trait named `1`.";
+DeclareIterator::satis="Iterator type must satisfy the trait `1`.";
+DeclareIterator::mdeps="The dependencies `2` for `1` is missing.";
 IteratorTraitInfo::trait="Unknown trait named `1`.";
 
 Begin["`Private`"];
@@ -116,18 +118,24 @@ DeclareIterator[type_String, data_Association, impl_Association]:=GeneralUtiliti
 ]
 
 resolveDependencies[traits_List]:=GeneralUtilities`Scope[
-  deps={};
+  If[!MemberQ[traits, "Base"],
+    GeneralUtilities`ThrowFailure[DeclareIterator::satis, "Base"]
+  ];
+  depschain={};
   Do[
-    dep=Lookup[$traits, trait,
+    deps=Lookup[$traits, trait,
       GeneralUtilities`ThrowFailure[DeclareIterator::trait, trait]
     ][["Deps"]];
-    If[dep=={},
-      AppendTo[deps,trait->None],
-      deps=Join[deps,Thread[trait->dep]]
+    If[deps=={},
+      AppendTo[depschain,trait->None],
+      If[!SubsetQ[traits, deps],
+        GeneralUtilities`ThrowFailure[DeclareIterator::mdeps, trait, Complement[deps, traits]]
+      ];
+      depschain=Join[depschain,Thread[trait->deps]]
     ],
     {trait, traits}
   ];
-  TopologicalSort[deps]//Most//Reverse
+  TopologicalSort[depschain]//Most//Reverse
 ]
 
 End[]; (* `Private` *)
