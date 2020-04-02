@@ -29,7 +29,7 @@ iter_Iterator[method_String]:=iter@method[]
 
 CreateIterator[type_, args___]:=Module[{$data},
   Block[{iter=Iterator[type, $data]},
-    iter@"__init__"[];
+    iter@"__init__";
     iter@"Setup"[args];
     iter
   ]
@@ -86,17 +86,10 @@ $traits = <|
     "Deps" -> {},
     "Info" -> "Base trait for all iterators.",
     "Methods" -> <|
+      "Setup" -> (Null&), (* allow any number of parameters *)
       "Next" -> Undefined,
       "SizeHint" -> Function[{}, Interval[{0,Infinity}]],
       "Collect" -> Function[{}, defaultCollect[$IteratorSelf]]
-    |>
-  |>,
-  "Constructor" -> <|
-    "Deps" -> {},
-    "Info" -> "Iterator constructor.",
-    "Methods" -> <|
-      "__init__" -> Automatic,
-      "Setup" -> (Null&) (* allow any number of parameters *)
     |>
   |>,
   "Copyable" -> <|
@@ -128,7 +121,12 @@ IteratorTraitInfo[trait_]:=GeneralUtilities`CatchFailureAndMessage[
 $types={};
 
 DeclareIterator[type_, field_Association]:=GeneralUtilities`CatchFailureAndMessage[
-  AppendTo[$types, type -> <|"Data"->field|>]
+  AppendTo[$types, type -> <|
+    "Data"->field
+  |>];
+  GeneralUtilities`BlockProtected[{Iterator},
+    Iterator[type, data_]@"__init__":=(data=field)
+  ];
 ]
 
 ImplementIterator[type_, trait_, methods_]:=GeneralUtilities`CatchFailureAndMessage[
