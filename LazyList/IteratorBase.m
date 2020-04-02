@@ -60,7 +60,10 @@ Unprotect[
 ];
 
 GeneralUtilities`SetUsage[DeclareIterator,
-  "DeclareIterator[type$, data$, impl$] declares a new iterator type$."
+  "DeclareIterator[type$, field$] declares a new iterator type$ with data field$."
+];
+GeneralUtilities`SetUsage[ImplementIterator,
+  "ImplementIterator[type$, trait$, methods$] implememt trait$ the iterator type$ with the methods$."
 ];
 GeneralUtilities`SetUsage[IteratorTraitInfo,
   "IteratorTraitInfo[] gives all iterator traits name.",
@@ -122,10 +125,13 @@ IteratorTraitInfo[trait_]:=GeneralUtilities`CatchFailureAndMessage[
   ][["Info"]]
 ]
 
-DeclareIterator[type_String, data_Association, impl_Association]:=GeneralUtilities`CatchFailureAndMessage[
-  GeneralUtilities`Scope[
-    traits = resolveDependencies[Keys@impl];
-  ]
+$types={};
+
+DeclareIterator[type_, field_Association]:=GeneralUtilities`CatchFailureAndMessage[
+  AppendTo[$types, type -> <|"Data"->field|>]
+]
+
+ImplementIterator[type_, trait_, methods_]:=GeneralUtilities`CatchFailureAndMessage[
 ]
 
 resolveDependencies[traits_List]:=GeneralUtilities`Scope[
