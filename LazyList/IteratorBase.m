@@ -18,25 +18,17 @@ GeneralUtilities`SetUsage[CreateIterator,
 GeneralUtilities`SetUsage[IteratorTypeQ,
   "IteratorTypeQ[iter$, type$] returns True if iter$ is an iterator of the type$, and return False otherwise.",
   "IteratorTypeQ[type$] represents an operator form of IteratorTypeQ that can be applied to an expression."
-]
+];
 
 SetAttributes[Iterator, HoldRest];
 SetAttributes[CreateIterator, HoldAll];
+
+CreateIterator::ntype="Unknown iterator type `1`.";
 
 Begin["`Private`"];
 
 iter_Iterator[method_String]:=iter@method[]
 
-CreateIterator[type_, args___]:=Module[{$data},
-  Block[{iter=Iterator[type, $data]},
-    iter@"__init__";
-    iter@"Setup"[args];
-    iter
-  ]
-]
-
-IteratorTypeQ[Iterator[type_,_], type_]:=True
-IteratorTypeQ[Iterator[type_[___],_], type_]:=True
 IteratorTypeQ[_, _]:=False
 IteratorTypeQ[type_][e_]:=IteratorTypeQ[e,type]
 
@@ -68,12 +60,13 @@ GeneralUtilities`SetUsage[ImplementIterator,
 GeneralUtilities`SetUsage[IteratorTraitInfo,
   "IteratorTraitInfo[] gives all iterator traits name.",
   "IteratorTraitInfo[trait$] show the infomation about trait$."
-]
+];
 
 $IteratorSelf::usage="$IteratorSelf is a placeholder for the iterator itself.";
 $IteratorType::usage="$IteratorType is a placeholder for the type of the iterator itself.";
 $IteratorData::usage="$IteratorData is a placeholder to access the data of the iterator itself.";
 
+DeclareIterator::typestr="Type name `1` should be a string.";
 DeclareIterator::trait="Unknown trait named `1`.";
 DeclareIterator::satis="Iterator type must satisfy the trait `1`.";
 DeclareIterator::mdeps="The dependencies `2` for `1` is missing.";
@@ -118,19 +111,36 @@ IteratorTraitInfo[trait_]:=GeneralUtilities`CatchFailureAndMessage[
   ][["Info"]]
 ]
 
-$types={};
+$type=<||>;
+
+GeneralUtilities`BlockProtected[{CreateIterator},
+  CreateIterator[type_, args___]:=GeneralUtilities`CatchFailureAndMessage@Module[
+    {$data = Lookup[$type, typeLabel[type],
+      GeneralUtilities`ThrowFailure[CreateIterator::ntype, type]
+    ][["Data"]]},
+    Block[{iter = Iterator[type, $data]},
+      iter@"Setup"[args];
+      iter
+    ]
+  ]
+]
 
 DeclareIterator[type_, field_Association]:=GeneralUtilities`CatchFailureAndMessage[
-  AppendTo[$types, type -> <|
-    "Data"->field
-  |>];
-  GeneralUtilities`BlockProtected[{Iterator},
-    Iterator[type, data_]@"__init__":=(data=field)
-  ];
+  AssociateTo[$type, typeLabel[type] -> <|
+    "Data" -> field
+  |>]
 ]
 
 ImplementIterator[type_, trait_, methods_]:=GeneralUtilities`CatchFailureAndMessage[
 ]
+
+typeLabel[Verbatim[Condition][inner_,_]]:=typeLabel[inner]
+typeLabel[Verbatim[PatternTest][inner_,_]]:=typeLabel[inner]
+typeLabel[Verbatim[HoldPattern][inner_]]:=typeLabel[inner]
+typeLabel[Verbatim[Pattern][_,inner_]]:=typeLabel[inner]
+typeLabel[inner_[___]]:=typeLabel[inner]
+typeLabel[type_String]:=type
+typeLabel[e_]:=GeneralUtilities`ThrowFailure[DeclareIterator::typestr, e]
 
 resolveDependencies[traits_List]:=GeneralUtilities`Scope[
   If[!MemberQ[traits, "Base"],
