@@ -46,6 +46,7 @@ BeginPackage["LazyList`IteratorBase`", {"LazyList`"}];
 
 Unprotect[
   DeclareIterator,
+  ImplementIterator,
   $IteratorSelf,
   $IteratorData,
   $IteratorType
@@ -55,7 +56,7 @@ GeneralUtilities`SetUsage[DeclareIterator,
   "DeclareIterator[type$, field$] declares a new iterator type$ with data field$."
 ];
 GeneralUtilities`SetUsage[ImplementIterator,
-  "ImplementIterator[type$, trait$, methods$] implememt trait$ the iterator type$ with the methods$."
+  "ImplementIterator[type$, trait$, methods$] implememt trait$ for the iterator type$ with the methods$."
 ];
 GeneralUtilities`SetUsage[IteratorTraitInfo,
   "IteratorTraitInfo[] gives all iterator traits name.",
@@ -94,6 +95,8 @@ $traits = <|
   |>
 |>;
 
+traitQ[name_]:=KeyExistsQ[$traits, name]
+
 defaultCollect[iter_Iterator]:=Block[
   {bag=Internal`Bag[],next},
   While[
@@ -113,6 +116,13 @@ IteratorTraitInfo[trait_]:=GeneralUtilities`CatchFailureAndMessage[
 
 $type=<||>;
 
+typeTraitQ[_, _]:=False
+
+GeneralUtilities`BlockProtected[{IteratorTypeQ},
+  IteratorTypeQ[Iterator[itype_,_], type_]:=typeLabel[itype]===type;
+  IteratorTypeQ[Iterator[itype_,_], trait_?traitQ]:=typeTraitQ[itype,trait];
+]
+
 GeneralUtilities`BlockProtected[{CreateIterator},
   CreateIterator[type_, args___]:=GeneralUtilities`CatchFailureAndMessage@Module[
     {$data = Lookup[$type, typeLabel[type],
@@ -128,11 +138,13 @@ GeneralUtilities`BlockProtected[{CreateIterator},
 DeclareIterator[type_, field_Association]:=GeneralUtilities`CatchFailureAndMessage[
   AssociateTo[$type, typeLabel[type] -> <|
     "Data" -> field
-  |>]
+  |>];
 ]
 
 ImplementIterator[type_, trait_, methods_]:=GeneralUtilities`CatchFailureAndMessage[
+  typeTraitQ[type, trait]=True;
 ]
+ImplementIterator[type_, trait_]:=ImplementIterator[type, trait, <||>]
 
 typeLabel[Verbatim[Condition][inner_,_]]:=typeLabel[inner]
 typeLabel[Verbatim[PatternTest][inner_,_]]:=typeLabel[inner]
@@ -167,6 +179,7 @@ End[]; (* `Private` *)
 
 Protect[
   DeclareIterator,
+  ImplementIterator,
   $IteratorSelf,
   $IteratorData,
   $IteratorType
