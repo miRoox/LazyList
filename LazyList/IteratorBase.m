@@ -5,7 +5,7 @@ BeginPackage["LazyList`"];
 Unprotect[
   Iterator,
   CreateIterator,
-  IteratorTypeQ
+  IteratorTypeMatchQ
 ];
 
 GeneralUtilities`SetUsage[Iterator,
@@ -15,7 +15,7 @@ GeneralUtilities`SetUsage[CreateIterator,
   "CreateIterator[expr$] creates a new iterator object from expr$.",
   "CreateIterator[type$, args$$] creates a new iterator object."
 ];
-GeneralUtilities`SetUsage[IteratorTypeQ,
+GeneralUtilities`SetUsage[IteratorTypeMatchQ,
   "IteratorTypeQ[iter$, type$] returns True if iter$ is an iterator of the type$, and return False otherwise.",
   "IteratorTypeQ[type$] represents an operator form of IteratorTypeQ that can be applied to an expression."
 ];
@@ -29,15 +29,15 @@ Begin["`Private`"];
 
 iter_Iterator[method_String]:=iter@method[]
 
-IteratorTypeQ[_, _]:=False
-IteratorTypeQ[type_][e_]:=IteratorTypeQ[e,type]
+IteratorTypeMatchQ[_, _]:=False
+IteratorTypeMatchQ[type_][e_]:=IteratorTypeMatchQ[e,type]
 
 End[]; (* `Private` *)
 
 Protect[
   Iterator,
   CreateIterator,
-  IteratorTypeQ
+  IteratorTypeMatchQ
 ];
 
 EndPackage[] (* LazyList` *)
@@ -116,12 +116,18 @@ IteratorTraitInfo[trait_]:=GeneralUtilities`CatchFailureAndMessage[
 
 $type=<||>;
 
-typeTraitQ[_, _]:=False
+traitImplQ[_, _]:=False
 
-GeneralUtilities`BlockProtected[{IteratorTypeQ},
-  IteratorTypeQ[Iterator[itype_,_], type_]:=typeLabel[itype]===type;
-  IteratorTypeQ[Iterator[itype_,_], trait_?traitQ]:=typeTraitQ[itype,trait];
+GeneralUtilities`BlockProtected[{IteratorTypeMatchQ},
+  IteratorTypeMatchQ[Iterator[itype_,_], type_]:=typeMatchQ[itype, type]
 ]
+
+typeMatchQ[type_, type_]:=True
+typeMatchQ[type_, trait_?traitQ]:=traitImplQ[type, trait]
+typeMatchQ[ptype_[__], ptype_]:=True
+typeMatchQ[ptype_[param1__], ptype_[param2__]] /; Length[{param1}]===Length[{param2}] :=
+    And@@MapThread[typeMatchQ, {{param1}, {param2}}]
+typeMatchQ[_, _]:=False
 
 GeneralUtilities`BlockProtected[{CreateIterator},
   CreateIterator[type_, args___]:=GeneralUtilities`CatchFailureAndMessage@Module[
@@ -142,14 +148,10 @@ DeclareIterator[type_, field_Association]:=GeneralUtilities`CatchFailureAndMessa
 ]
 
 ImplementIterator[type_, trait_, methods_]:=GeneralUtilities`CatchFailureAndMessage[
-  typeTraitQ[type, trait]=True;
+  traitImplQ[type, trait]=True;
 ]
 ImplementIterator[type_, trait_]:=ImplementIterator[type, trait, <||>]
 
-typeLabel[Verbatim[Condition][inner_,_]]:=typeLabel[inner]
-typeLabel[Verbatim[PatternTest][inner_,_]]:=typeLabel[inner]
-typeLabel[Verbatim[HoldPattern][inner_]]:=typeLabel[inner]
-typeLabel[Verbatim[Pattern][_,inner_]]:=typeLabel[inner]
 typeLabel[inner_[___]]:=typeLabel[inner]
 typeLabel[type_String]:=type
 typeLabel[e_]:=GeneralUtilities`ThrowFailure[DeclareIterator::typestr, e]
