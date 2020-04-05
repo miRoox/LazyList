@@ -114,7 +114,10 @@ IteratorTraitInfo[trait_]:=GeneralUtilities`CatchFailureAndMessage[
   ][["Info"]]
 ]
 
-$type=<||>;
+$types=<||>;
+$typeTemplates=<||>;
+
+instantiatedTypeQ[t_]:=KeyExistsQ[$types, t]
 
 traitImplQ[_, _]:=False
 
@@ -129,26 +132,46 @@ typeMatchQ[ptype_[param1__], ptype_[param2__]] /; Length[{param1}]===Length[{par
     And@@MapThread[typeMatchQ, {{param1}, {param2}}]
 typeMatchQ[_, _]:=False
 
+instantiateType[type_String]:=If[!instantiatedTypeQ[type],
+  GeneralUtilities`ThrowFailure[CreateIterator::ntype, type]
+]
+instantiateType[ptype_[params___]]:=(Scan[instantiateType,{params}])(*todo*)
+
 GeneralUtilities`BlockProtected[{CreateIterator},
-  CreateIterator[type_, args___]:=GeneralUtilities`CatchFailureAndMessage@Module[
-    {$data = Lookup[$type, typeLabel[type],
-      GeneralUtilities`ThrowFailure[CreateIterator::ntype, type]
-    ][["Data"]]},
-    Block[{iter = Iterator[type, $data]},
-      iter@"Setup"[args];
-      iter
+  CreateIterator[type_, args___]:=GeneralUtilities`CatchFailureAndMessage[
+    instantiateType[type];
+    Module[
+      {$data = Lookup[$types, type,
+        GeneralUtilities`ThrowFailure[CreateIterator::ntype, type]
+      ][["Data"]]},
+      Block[{iter = Iterator[type, $data]},
+        iter@"Setup"[args];
+        iter
+      ]
     ]
   ]
 ]
 
-DeclareIterator[type_, field_Association]:=GeneralUtilities`CatchFailureAndMessage[
-  AssociateTo[$type, typeLabel[type] -> <|
+$nonParamatricTypePatt=_String|_String[params__String/;AllTrue[{params},instantiatedTypeQ]]
+$paramatricTypePatt=_String[params__/;AnyTrue[]]
+
+DeclareIterator[type:$nonParamatricTypePatt, field_Association]:=GeneralUtilities`CatchFailureAndMessage[
+  AssociateTo[$types, type -> <|
     "Data" -> field
   |>];
 ]
+act:DeclareIterator[ptype_String[params__], field_Association]:=GeneralUtilities`CatchFailureAndMessage[
+  Inactive[act](*todo*)
+]
 
-ImplementIterator[type_, trait_, methods_]:=GeneralUtilities`CatchFailureAndMessage[
+ImplementIterator[type:$nonParamatricTypePatt, trait_, methods_]:=GeneralUtilities`CatchFailureAndMessage[
+  Internal`InheritedBlock[{traitImplQ},
+    traitImplQ[type, trait]=True;(*todo*)
+  ];
   traitImplQ[type, trait]=True;
+]
+act:ImplementIterator[ptype_String[params__], trait_, methods_]:=GeneralUtilities`CatchFailureAndMessage[
+  Inactive[act](*todo*)
 ]
 ImplementIterator[type_, trait_]:=ImplementIterator[type, trait, <||>]
 
