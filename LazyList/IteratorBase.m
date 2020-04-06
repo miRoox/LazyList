@@ -165,16 +165,22 @@ act:DeclareIterator[_String[__], _Association]:=GeneralUtilities`CatchFailureAnd
   registerTypeTemplate[Inactivate[act]];
 ]
 
-ImplementIterator[type:$nonParamatricTypePatt, trait_, methods_]:=GeneralUtilities`CatchFailureAndMessage[
+ImplementIterator[type:$nonParamatricTypePatt, None|PatternSequence[], methods_]:=GeneralUtilities`CatchFailureAndMessage[
+  doImplMethods[type, methods]
+]
+ImplementIterator[type:$nonParamatricTypePatt, trait_?traitQ, methods_]:=GeneralUtilities`CatchFailureAndMessage[
   Internal`InheritedBlock[{traitImplQ},
     traitImplQ[type, trait]=True;(*todo*)
+    doImplMethods[type, resolveTraitMethods[trait, methods]]
   ];
   traitImplQ[type, trait]=True;
 ]
 act:ImplementIterator[_String[__], _, _|PatternSequence[]]:=GeneralUtilities`CatchFailureAndMessage[
   registerTypeTemplate[Inactivate[act]];
 ]
-ImplementIterator[type_, trait_]:=ImplementIterator[type, trait, <||>]
+ImplementIterator[type_, trait_?traitQ]:=ImplementIterator[type, trait, <||>]
+
+doImplMethods[type_, methods_]:=Missing[](*todo*)
 
 registerTypeTemplate[act:f_Inactive[ptype_[__], args__]]:=If[KeyExistsQ[$typeTemplates, ptype],
   AppendTo[$typeTemplates[[ptype]], act],(*todo: sort?*)
