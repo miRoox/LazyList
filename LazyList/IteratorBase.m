@@ -71,6 +71,7 @@ DeclareIterator::typestr="Type name `1` should be a string.";
 DeclareIterator::trait="Unknown trait named `1`.";
 DeclareIterator::satis="Iterator type must satisfy the trait `1`.";
 DeclareIterator::mdeps="The dependencies `2` for `1` is missing.";
+ImplementIterator::require="The method `1` is required.";
 IteratorTraitInfo::trait="Unknown trait named `1`.";
 
 Begin["`Private`"];
@@ -180,7 +181,18 @@ act:ImplementIterator[_String[__], _, _|PatternSequence[]]:=GeneralUtilities`Cat
 ]
 ImplementIterator[type_, trait_?traitQ]:=ImplementIterator[type, trait, {}]
 
-doImplMethods[type_, methods_]:=Missing[](*todo*)
+doImplMethods[type_, methods_]:=GeneralUtilities`BlockProtected[{Iterator},
+  Activate[substImplMethods[type]/@methods, SetDelayed]
+]
+substImplMethods[type_][(Rule|RuleDelayed)[lhs_, Undefined]]:=GeneralUtilities`ThrowFailure[ImplementIterator::require, lhs]
+substImplMethods[type_][(Rule|RuleDelayed)[lhs_, rhs_]]:=TemplateApply[
+  Inactivate[
+    ($IteratorSelf:Iterator[type, $IteratorData_])[lhs]:=TemplateEvaluate[expandMethodRHS[type, rhs]],
+    SetDelayed
+  ]
+]
+SetAttributes[expandMethodRHS, HoldRest]
+expandMethodRHS[type_, rhs_]:=Hold[rhs]/.{$IteratorType->type}//ReleaseHold
 
 registerTypeTemplate[act:f_Inactive[ptype_[__], args__]]:=If[KeyExistsQ[$typeTemplates, ptype],
   AppendTo[$typeTemplates[[ptype]], act],(*todo: sort?*)
