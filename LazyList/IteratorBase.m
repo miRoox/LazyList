@@ -76,7 +76,7 @@ IteratorTraitInfo::trait="Unknown trait named `1`.";
 Begin["`Private`"];
 
 $traits = <|
-  "Base" -> <|
+  "Any" -> <|
     "Deps" -> {},
     "Info" -> "Base trait for all iterators.",
     "Methods" -> <|
@@ -180,8 +180,8 @@ typeLabel[type_String]:=type
 typeLabel[e_]:=GeneralUtilities`ThrowFailure[DeclareIterator::typestr, e]
 
 resolveDependencies[traits_List]:=GeneralUtilities`Scope[
-  If[!MemberQ[traits, "Base"],
-    GeneralUtilities`ThrowFailure[DeclareIterator::satis, "Base"]
+  If[!MemberQ[traits, "Any"],
+    GeneralUtilities`ThrowFailure[DeclareIterator::satis, "Any"]
   ];
   depschain={};
   Do[
