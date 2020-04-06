@@ -79,19 +79,19 @@ $traits = <|
   "Any" -> <|
     "Deps" -> {},
     "Info" -> "Base trait for all iterators.",
-    "Methods" -> <|
-      "Setup" -> (Null&), (* allow any number of parameters *)
-      "Next" -> Undefined,
-      "SizeHint" -> Function[{}, Interval[{0,Infinity}]],
-      "Collect" -> Function[{}, defaultCollect[$IteratorSelf]]
-    |>
+    "Methods" -> {
+      "Setup"[___] :> Null,
+      "Next"[] :> Undefined,
+      "SizeHint"[] :> Interval[{0,Infinity}],
+      "Collect"[] :> defaultCollect[$IteratorSelf]
+    }
   |>,
   "Copyable" -> <|
-    "Deps" -> {},
+    "Deps" -> {"Any"},
     "Info" -> "Copyable iterators.",
-    "Methods" -> <|
-      "Copy" -> Function[{}, Module[{$data=$IteratorData}, Iterator[$IteratorType, $data]]]
-    |>
+    "Methods" -> {
+      "Copy"[] :> Module[{$data=$IteratorData}, Iterator[$IteratorType, $data]]
+    }
   |>
 |>;
 
@@ -178,7 +178,7 @@ ImplementIterator[type:$nonParamatricTypePatt, trait_?traitQ, methods_]:=General
 act:ImplementIterator[_String[__], _, _|PatternSequence[]]:=GeneralUtilities`CatchFailureAndMessage[
   registerTypeTemplate[Inactivate[act]];
 ]
-ImplementIterator[type_, trait_?traitQ]:=ImplementIterator[type, trait, <||>]
+ImplementIterator[type_, trait_?traitQ]:=ImplementIterator[type, trait, {}]
 
 doImplMethods[type_, methods_]:=Missing[](*todo*)
 
