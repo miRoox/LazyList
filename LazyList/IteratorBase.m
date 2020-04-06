@@ -135,7 +135,9 @@ typeMatchQ[_, _]:=False
 instantiateType[type_String]:=If[!instantiatedTypeQ[type],
   GeneralUtilities`ThrowFailure[CreateIterator::ntype, type]
 ]
-instantiateType[ptype_[params___]]:=(Scan[instantiateType,{params}])(*todo*)
+instantiateType[ptype_[params___]]:=(
+  Scan[instantiateType,{params}]
+)(*todo*)
 
 GeneralUtilities`BlockProtected[{CreateIterator},
   CreateIterator[type_, args___]:=GeneralUtilities`CatchFailureAndMessage[
@@ -153,15 +155,14 @@ GeneralUtilities`BlockProtected[{CreateIterator},
 ]
 
 $nonParamatricTypePatt=_String|_String[params__String/;AllTrue[{params},instantiatedTypeQ]]
-$paramatricTypePatt=_String[params__/;AnyTrue[]]
 
 DeclareIterator[type:$nonParamatricTypePatt, field_Association]:=GeneralUtilities`CatchFailureAndMessage[
   AssociateTo[$types, type -> <|
     "Data" -> field
   |>];
 ]
-act:DeclareIterator[ptype_String[params__], field_Association]:=GeneralUtilities`CatchFailureAndMessage[
-  Inactive[act](*todo*)
+act:DeclareIterator[_String[__], _Association]:=GeneralUtilities`CatchFailureAndMessage[
+  registerTypeTemplate[Inactivate[act]];
 ]
 
 ImplementIterator[type:$nonParamatricTypePatt, trait_, methods_]:=GeneralUtilities`CatchFailureAndMessage[
@@ -170,10 +171,15 @@ ImplementIterator[type:$nonParamatricTypePatt, trait_, methods_]:=GeneralUtiliti
   ];
   traitImplQ[type, trait]=True;
 ]
-act:ImplementIterator[ptype_String[params__], trait_, methods_]:=GeneralUtilities`CatchFailureAndMessage[
-  Inactive[act](*todo*)
+act:ImplementIterator[_String[__], _, _|PatternSequence[]]:=GeneralUtilities`CatchFailureAndMessage[
+  registerTypeTemplate[Inactivate[act]];
 ]
 ImplementIterator[type_, trait_]:=ImplementIterator[type, trait, <||>]
+
+registerTypeTemplate[act:f_Inactive[ptype_[__], args__]]:=If[KeyExistsQ[$typeTemplates, ptype],
+  AppendTo[$typeTemplates[[ptype]], act],(*todo: sort?*)
+  AssociateTo[$typeTemplates, ptype->{act}]
+]
 
 typeLabel[inner_[___]]:=typeLabel[inner]
 typeLabel[type_String]:=type
