@@ -166,14 +166,14 @@ act:DeclareIterator[_String[__], _Association]:=GeneralUtilities`CatchFailureAnd
 ]
 
 ImplementIterator[type:$nonParamatricTypePatt, None|PatternSequence[], methods_List]:=GeneralUtilities`CatchFailureAndMessage[
-  doImplMethods[type, methods]
+  doImplMethods[type, methods];
 ]
 ImplementIterator[type:$nonParamatricTypePatt, trait_String, methods_List]:=GeneralUtilities`CatchFailureAndMessage[
   checkTraitName[trait];
   Internal`InheritedBlock[{traitImplQ},
     traitImplQ[type, trait]=True;
     checkTraitDeps[type, trait];
-    doImplMethods[type, resolveTraitMethods[trait, methods]]
+    doImplMethods[type, resolveTraitMethods[trait, methods]];
   ];
   traitImplQ[type, trait]=True;
 ]
