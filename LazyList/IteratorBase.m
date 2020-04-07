@@ -67,8 +67,6 @@ $IteratorSelf::usage="$IteratorSelf is a placeholder for the iterator itself.";
 $IteratorType::usage="$IteratorType is a placeholder for the type of the iterator itself.";
 $IteratorData::usage="$IteratorData is a placeholder to access the data of the iterator itself.";
 
-DeclareIterator::typestr="Type name `1` should be a string.";
-DeclareIterator::satis="Iterator type must satisfy the trait `1`.";
 ImplementIterator::trait="Unknown trait named `1`.";
 ImplementIterator::mdeps="The dependencies `2` for `1` is missing.";
 ImplementIterator::require="The method `1` is required.";
@@ -213,31 +211,6 @@ expandMethodRHS[type_, rhs_]:=Hold[rhs]/.{$IteratorType->type}//ReleaseHold
 registerTypeTemplate[act:f_Inactive[ptype_[__], args__]]:=If[KeyExistsQ[$typeTemplates, ptype],
   AppendTo[$typeTemplates[[ptype]], act],(*todo: sort?*)
   AssociateTo[$typeTemplates, ptype->{act}]
-]
-
-typeLabel[inner_[___]]:=typeLabel[inner]
-typeLabel[type_String]:=type
-typeLabel[e_]:=GeneralUtilities`ThrowFailure[DeclareIterator::typestr, e]
-
-resolveDependencies[traits_List]:=GeneralUtilities`Scope[
-  If[!MemberQ[traits, "Any"],
-    GeneralUtilities`ThrowFailure[DeclareIterator::satis, "Any"]
-  ];
-  depschain={};
-  Do[
-    deps=Lookup[$traits, trait,
-      GeneralUtilities`ThrowFailure[DeclareIterator::trait, trait]
-    ][["Deps"]];
-    If[deps=={},
-      AppendTo[depschain,trait->None],
-      If[!SubsetQ[traits, deps],
-        GeneralUtilities`ThrowFailure[DeclareIterator::mdeps, trait, Complement[deps, traits]]
-      ];
-      depschain=Join[depschain,Thread[trait->deps]]
-    ],
-    {trait, traits}
-  ];
-  TopologicalSort[depschain]//Most//Reverse
 ]
 
 End[]; (* `Private` *)
