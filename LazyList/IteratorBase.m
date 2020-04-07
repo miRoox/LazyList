@@ -82,7 +82,7 @@ $traits = <|
     "Info" -> "Base trait for all iterators.",
     "Methods" -> {
       "Setup"[___] :> Null,
-      "Next"[] :> Undefined,
+      "Next"[] -> Undefined,
       "SizeHint"[] :> Interval[{0,Infinity}],
       "Collect"[] :> defaultCollect[$IteratorSelf]
     }
@@ -184,7 +184,7 @@ ImplementIterator[type_, trait_?traitQ]:=ImplementIterator[type, trait, {}]
 doImplMethods[type_, methods_]:=GeneralUtilities`BlockProtected[{Iterator},
   Activate[substImplMethods[type]/@methods, SetDelayed]
 ]
-substImplMethods[type_][(Rule|RuleDelayed)[lhs_, Undefined]]:=GeneralUtilities`ThrowFailure[ImplementIterator::require, lhs]
+substImplMethods[type_][Rule[lhs_, Undefined]]:=GeneralUtilities`ThrowFailure[ImplementIterator::require, lhs]
 substImplMethods[type_][(Rule|RuleDelayed)[lhs_, rhs_]]:=TemplateApply[
   Inactivate[
     ($IteratorSelf:Iterator[type, $IteratorData_])[lhs]:=TemplateEvaluate[expandMethodRHS[type, rhs]],
