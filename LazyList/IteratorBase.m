@@ -70,6 +70,7 @@ $IteratorData::usage="$IteratorData is a placeholder to access the data of the i
 ImplementIterator::trait="Unknown trait named `1`.";
 ImplementIterator::mdeps="The dependencies `2` for `1` is missing.";
 ImplementIterator::require="The method `1` is required.";
+ImplementIterator::nfor="The method `1` is not for trait `2`.";
 IteratorTraitInfo::trait="Unknown trait named `1`.";
 
 Begin["`Private`"];
@@ -207,6 +208,13 @@ substImplMethods[type_][(Rule|RuleDelayed)[lhs_, rhs_]]:=TemplateApply[
 ]
 SetAttributes[expandMethodRHS, HoldRest]
 expandMethodRHS[type_, rhs_]:=Hold[rhs]/.{$IteratorType->type}//ReleaseHold
+
+overrideMethods[trait_][methods_List, override:(Rule|RuleDelayed)[lhs_,_]]:=GeneralUtilities`Match[
+  Position[methods, method_/;GeneralUtilities`EquivalentPatternQ[method, override]],
+  {{i_}} :> ReplacePart[methods, i->override],
+  {} :> GeneralUtilities`ThrowFailure[ImplementIterator::nfor, lhs, trait]
+]
+resolveTraitMethods[trait_, methods_List]:=Fold[overrideMethods[trait], $traits[[trait, "Methods"]], methods]
 
 registerTypeTemplate[act:f_Inactive[ptype_[__], args__]]:=If[KeyExistsQ[$typeTemplates, ptype],
   AppendTo[$typeTemplates[[ptype]], act],(*todo: sort?*)
