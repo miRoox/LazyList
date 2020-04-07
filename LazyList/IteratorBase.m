@@ -161,7 +161,7 @@ DeclareIterator[type:$nonParamatricTypePatt, field_Association]:=GeneralUtilitie
   |>];
 ]
 act:DeclareIterator[_String[__], _Association]:=GeneralUtilities`CatchFailureAndMessage[
-  registerTypeTemplate[Inactivate[act]];
+  registerTypeTemplate[Inactivate[act, DeclareIterator]];
 ]
 
 ImplementIterator[type:$nonParamatricTypePatt, None|PatternSequence[], methods_List]:=GeneralUtilities`CatchFailureAndMessage[
@@ -178,10 +178,10 @@ ImplementIterator[type:$nonParamatricTypePatt, trait_String, methods_List]:=Gene
 ]
 act:ImplementIterator[_String[__], trait_String, _List]:=GeneralUtilities`CatchFailureAndMessage[
   checkTraitName[trait];
-  registerTypeTemplate[Inactivate[act]];
+  registerTypeTemplate[Inactivate[act, ImplementIterator]];
 ]
 act:ImplementIterator[_String[__], None|PatternSequence[], _List]:=GeneralUtilities`CatchFailureAndMessage[
-  registerTypeTemplate[Inactivate[act]];
+  registerTypeTemplate[Inactivate[act, ImplementIterator]];
 ]
 ImplementIterator[type_, trait_String]:=ImplementIterator[type, trait, {}]
 
