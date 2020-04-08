@@ -146,7 +146,7 @@ GeneralUtilities`BlockProtected[{CreateIterator},
       {$data = Lookup[$types, type,
         GeneralUtilities`ThrowFailure[CreateIterator::ntype, type]
       ][["Data"]]},
-      Block[{iter = Iterator[type, $data]},
+      Block[{iter = System`Private`ConstructNoEntry[Iterator, type, $data]},
         iter@"Setup"[args];
         iter
       ]
