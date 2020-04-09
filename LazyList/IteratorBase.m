@@ -139,8 +139,8 @@ typeMatchQ[_, _]:=False
 instantiateType[type_String]:=If[!instantiatedTypeQ[type],
   GeneralUtilities`ThrowFailure[CreateIterator::ntype, type]
 ]
-instantiateType[ptype_[params___]]:=(
-  Scan[instantiateType,{params}]
+instantiateType[ptype_[params__]]:=(
+  Scan[instantiateType, {params}];
 )(*todo*)
 
 GeneralUtilities`BlockProtected[{CreateIterator},
