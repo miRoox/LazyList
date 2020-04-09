@@ -113,9 +113,9 @@ defaultCollect[iter_Iterator]:=Block[
 
 IteratorTraitInfo[]:=Keys[$traits]
 IteratorTraitInfo[trait_]:=GeneralUtilities`CatchFailureAndMessage[
-  Lookup[$traits, trait,
+  ResourceFunction["NestedLookup"][$traits, {trait, "Info"},
     GeneralUtilities`ThrowFailure[IteratorTraitInfo::trait, trait]
-  ][["Info"]]
+  ]
 ]
 
 $types=<||>;
@@ -147,9 +147,9 @@ GeneralUtilities`BlockProtected[{CreateIterator},
   CreateIterator[type_, args___]:=GeneralUtilities`CatchFailureAndMessage[
     instantiateType[type];
     Module[
-      {$data = Lookup[$types, type,
+      {$data = ResourceFunction["NestedLookup"][$types, {type, "Data"},
         GeneralUtilities`ThrowFailure[CreateIterator::ntype, type]
-      ][["Data"]]},
+      ]},
       Block[{iter = System`Private`SetNoEntry@Iterator[type, $data]},
         iter@"Setup"[args];
         iter
@@ -161,9 +161,7 @@ GeneralUtilities`BlockProtected[{CreateIterator},
 $nonParamatricTypePatt=_String|_String[params__String/;AllTrue[{params},instantiatedTypeQ]]
 
 DeclareIterator[type:$nonParamatricTypePatt, field_Association]:=GeneralUtilities`CatchFailureAndMessage[
-  AssociateTo[$types, type -> <|
-    "Data" -> field
-  |>];
+  $types = ResourceFunction["NestedAssociate"][$types, {type, "Data"} -> field];
 ]
 act:DeclareIterator[_String[__], _Association]:=GeneralUtilities`CatchFailureAndMessage[
   registerTypeTemplate[Inactivate[act, DeclareIterator]];
