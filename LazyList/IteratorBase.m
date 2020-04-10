@@ -136,12 +136,23 @@ typeMatchQ[ptype_[param1__], ptype_[param2__]] /; Length[{param1}]===Length[{par
     And@@MapThread[typeMatchQ, {{param1}, {param2}}]
 typeMatchQ[_, _]:=False
 
-instantiateType[type_String]:=If[!instantiatedTypeQ[type],
-  GeneralUtilities`ThrowFailure[CreateIterator::ntype, type]
-]
-instantiateType[ptype_[params__]]:=(
+typeMoreSpecificQ[_?instantiatedTypeQ, _]:=True
+typeMoreSpecificQ[_[__], _?traitQ]:=True
+typeMoreSpecificQ[t1_?traitQ, t2_?traitQ]:=MemberQ[$traits[[t1, "Deps"]], t2]
+typeMoreSpecificQ[_?traitQ, None]:=True
+typeMoreSpecificQ[ptype_[param1__], ptype_[param2__]]:=And@@MapThread[typeMoreSpecificQ, {{param1}, {param2}}]
+typeMoreSpecificQ[_, _]:=False
+
+instantiateType[_?instantiatedTypeQ]:=Null
+instantiateType[type_String]:=GeneralUtilities`ThrowFailure[CreateIterator::ntype, type]
+instantiateType[type:ptype_[params__]]:=Block[{},
   Scan[instantiateType, {params}];
-)(*todo*)
+  Scan[
+    DeclareIterator[type, #Data];
+    KeyValueMap[ImplementIterator[type, #1, #2]&, KeySort[#Implement, typeMoreSpecificQ]];&,
+    KeySort[KeySelect[$typeTemplates, typeMatchQ[type, #]&], typeMoreSpecificQ]
+  ]
+]
 
 GeneralUtilities`BlockProtected[{CreateIterator},
   CreateIterator[type_, args___]:=GeneralUtilities`CatchFailureAndMessage[
@@ -163,8 +174,8 @@ $nonParamatricTypePatt=_String|_String[params__String/;AllTrue[{params},instanti
 DeclareIterator[type:$nonParamatricTypePatt, field_Association]:=GeneralUtilities`CatchFailureAndMessage[
   $types = ResourceFunction["NestedAssociate"][$types, {type, "Data"} -> field];
 ]
-act:DeclareIterator[_String[__], _Association]:=GeneralUtilities`CatchFailureAndMessage[
-  registerTypeTemplate[Inactivate[act, DeclareIterator]];
+DeclareIterator[type:_String[__String], field_Association]:=GeneralUtilities`CatchFailureAndMessage[
+  $typeTemplates = ResourceFunction["NestedAssociate"][$typeTemplates, {type, "Data"} -> field];
 ]
 
 ImplementIterator[type:$nonParamatricTypePatt, None|PatternSequence[], methods_List]:=GeneralUtilities`CatchFailureAndMessage[
@@ -179,12 +190,12 @@ ImplementIterator[type:$nonParamatricTypePatt, trait_String, methods_List]:=Gene
   ];
   traitImplQ[type, trait]=True;
 ]
-act:ImplementIterator[_String[__], trait_String, _List]:=GeneralUtilities`CatchFailureAndMessage[
+ImplementIterator[type:_String[__String], trait_String, methods_List]:=GeneralUtilities`CatchFailureAndMessage[
   checkTraitName[trait];
-  registerTypeTemplate[Inactivate[act, ImplementIterator]];
+  $typeTemplates = ResourceFunction["NestedAssociate"][$typeTemplates, {type, "Implement", trait} -> methods];
 ]
-act:ImplementIterator[_String[__], None|PatternSequence[], _List]:=GeneralUtilities`CatchFailureAndMessage[
-  registerTypeTemplate[Inactivate[act, ImplementIterator]];
+ImplementIterator[type:_String[__String], None|PatternSequence[], methods_List]:=GeneralUtilities`CatchFailureAndMessage[
+  $typeTemplates = ResourceFunction["NestedAssociate"][$typeTemplates, {type, "Implement", None} -> methods];
 ]
 ImplementIterator[type_, trait_String]:=ImplementIterator[type, trait, {}]
 
@@ -217,11 +228,6 @@ overrideMethods[trait_][methods_List, override:(Rule|RuleDelayed)[lhs_,_]]:=Gene
   {} :> GeneralUtilities`ThrowFailure[ImplementIterator::nfor, lhs, trait]
 ]
 resolveTraitMethods[trait_, methods_List]:=Fold[overrideMethods[trait], $traits[[trait, "Methods"]], methods]
-
-registerTypeTemplate[act:f_Inactive[ptype_[__], args__]]:=If[KeyExistsQ[$typeTemplates, ptype],
-  AppendTo[$typeTemplates[[ptype]], act],(*todo: sort?*)
-  AssociateTo[$typeTemplates, ptype->{act}]
-]
 
 End[]; (* `Private` *)
 
