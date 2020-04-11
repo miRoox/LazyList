@@ -54,6 +54,31 @@ $traits = <|
     "Methods" -> {
       "Copy"[] :> Module[{$data=$IteratorData}, Iterator[$IteratorType, $data]]
     }
+  |>,
+  "Peekable" -> <|
+    "Deps" -> {"Any"},
+    "Info" -> "Peekable iterators.",
+    "Methods" -> {
+      "Peek"[] -> Undefined
+    }
+  |>,
+  "Bidirectional" -> <|
+    "Deps" -> {"Any"},
+    "Info" -> "Bidirectional iterators.",
+    "Methods" -> {
+      "Previous"[] -> Undefined
+    }
+  |>,
+  "ExactSize" -> <|
+    "Deps" -> {"Any"},
+    "Info" -> "Exact size iterators.",
+    "Methods" -> {
+      "Length"[] :> Block[
+        {len=$IteratorSelf@"SizeHint"[]},
+        Assert@MatchQ[len,_Integer?NonNegative];
+        len
+      ]
+    }
   |>
 |>;
 
