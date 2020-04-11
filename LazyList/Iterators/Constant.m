@@ -11,5 +11,6 @@ ImplementIterator["Constant", "Copyable"]
 
 SetAttributes[constantSetup, HoldFirst];
 constantSetup[data_, c_]:=data@"Element"=c
+constantSetup[_, args___]:=IteratorSetupArgumentsCheck["Constant", Length@{args}, 1]
 
 End[]

@@ -25,6 +25,15 @@ SetAttributes[CreateIterator, HoldAll];
 
 Iterator::nmethod="`1` is not a known method with `2` parameters for the iterator of type `3`.";
 CreateIterator::ntype="Unknown iterator type `1`.";
+CreateIterator::cargb="Construct `1` iterator with `2` arguments; between `3` and `4` arguments are expected.";
+CreateIterator::cargbu="Construct `1` iterator with 1 argument; between `2` and `3` arguments are expected.";
+CreateIterator::cargm="Construct `1` iterator with `2` arguments; `3` or more arguments are expected.";
+CreateIterator::cargmu="Construct `1` iterator with 1 argument; `2` or more arguments are expected.";
+CreateIterator::cargt="Construct `1` iterator with `2` arguments; `3` or `4` arguments are expected.";
+CreateIterator::cargtu="Construct `1` iterator with 1 argument; `2` or `3` arguments are expected.";
+CreateIterator::cargr="Construct `1` iterator with 1 argument; `2` arguments are expected.";
+CreateIterator::cargx="Construct `1` iterator with `2` arguments; 1 argument is expected.";
+CreateIterator::cargrx="Construct `1` iterator with `2` arguments; `3` arguments are expected.";
 
 Begin["`Private`"];
 

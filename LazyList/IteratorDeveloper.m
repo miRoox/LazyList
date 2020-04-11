@@ -20,6 +20,10 @@ GeneralUtilities`SetUsage[IteratorTraitInfo,
   "IteratorTraitInfo[] gives all iterator traits name.",
   "IteratorTraitInfo[trait$] show the infomation about trait$."
 ];
+GeneralUtilities`SetUsage[IteratorSetupArgumentsCheck,
+  "IteratorSetupArgumentsCheck[type$, argnum$, num$] throws an error if argnum$ and num$ are not equal.",
+  "IteratorSetupArgumentsCheck[type$, argnum$, {min$, max$}] throws an error if argnum$ is not between min$ and max$."
+]
 
 $IteratorSelf::usage="$IteratorSelf is a placeholder for the iterator itself.";
 $IteratorType::usage="$IteratorType is a placeholder for the type of the iterator itself.";
@@ -188,6 +192,33 @@ overrideMethods[trait_][methods_List, override:(Rule|RuleDelayed)[lhs_,_]]:=Gene
   {} :> GeneralUtilities`ThrowFailure[ImplementIterator::nfor, lhs, trait]
 ]
 resolveTraitMethods[trait_, methods_List]:=Fold[overrideMethods[trait], $traits[[trait, "Methods"]], methods]
+
+IteratorSetupArgumentsCheck[type_, argnum_Integer?NonNegative, num_Integer?NonNegative]:=If[num!=argnum,
+  Which[
+    argnum==1, GeneralUtilities`ThrowFailure[CreateIterator::cargr, type, num],
+    num==1, GeneralUtilities`ThrowFailure[CreateIterator::cargx, type, argnum],
+    True, GeneralUtilities`ThrowFailure[CreateIterator::cargrx, type, argnum, num]
+  ]
+]
+IteratorSetupArgumentsCheck[type_, argnum_Integer?NonNegative, {min_Integer, max_Integer}/; 0<=min<=max]:=If[!min<=argnum<=max,
+  Which[
+    max===Infinity,
+    If[argnum==1,
+      GeneralUtilities`ThrowFailure[CreateIterator::cargmu, type, min],
+      GeneralUtilities`ThrowFailure[CreateIterator::cargm, type, argnum, min]
+    ],
+    max-min==1,
+    If[argnum==1,
+      GeneralUtilities`ThrowFailure[CreateIterator::cargtu, type, min, max],
+      GeneralUtilities`ThrowFailure[CreateIterator::cargt, type, argnum, min, max]
+    ],
+    True,
+    If[argnum==1,
+      GeneralUtilities`ThrowFailure[CreateIterator::cargbu, type, min, max],
+      GeneralUtilities`ThrowFailure[CreateIterator::cargb, type, argnum, min, max]
+    ]
+  ]
+]
 
 End[]; (* `Private` *)
 
