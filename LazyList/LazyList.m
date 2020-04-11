@@ -49,3 +49,4 @@ Protect[
 EndPackage[] (* LazyList` *)
 
 Get["LazyList`IteratorDeveloper`"]
+Get["LazyList`Iterators`"]
