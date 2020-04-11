@@ -4,8 +4,7 @@ BeginPackage["LazyList`"];
 
 Unprotect[
   Iterator,
-  CreateIterator,
-  IteratorTypeMatchQ
+  CreateIterator
 ];
 
 GeneralUtilities`SetUsage[Iterator,
@@ -18,6 +17,9 @@ GeneralUtilities`SetUsage[CreateIterator,
 GeneralUtilities`SetUsage[IteratorTypeMatchQ,
   "IteratorTypeQ[iter$, type$] returns True if iter$ is an iterator of the type$, and return False otherwise.",
   "IteratorTypeQ[type$] represents an operator form of IteratorTypeQ that can be applied to an expression."
+];
+GeneralUtilities`SetUsage[IteratorTypeOf,
+  "IteratorTypeOf[iterator$] returns the iterator$ type name."
 ];
 
 SetAttributes[Iterator, HoldRest];
@@ -50,12 +52,13 @@ Iterator/:Read[iter_Iterator]:=iter@"Next"[]
 IteratorTypeMatchQ[_, _]:=False
 IteratorTypeMatchQ[type_][e_]:=IteratorTypeMatchQ[e,type]
 
+IteratorTypeOf[Iterator[type_,_]]:=type
+
 End[]; (* `Private` *)
 
 Protect[
   Iterator,
-  CreateIterator,
-  IteratorTypeMatchQ
+  CreateIterator
 ];
 
 EndPackage[] (* LazyList` *)
