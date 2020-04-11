@@ -174,7 +174,9 @@ substImplMethods[type_][(Rule|RuleDelayed)[lhs_, rhs_]]:=TemplateApply[
   ]
 ]
 SetAttributes[expandMethodRHS, HoldRest]
-expandMethodRHS[type_, rhs_]:=Hold[rhs]/.{$IteratorType->type}//ReleaseHold
+expandMethodRHS[type_, rhs_]:=quoteRHS[rhs]/.{$IteratorType->type}
+SetAttributes[quoteRHS, {HoldAll, SequenceHold}]
+quoteRHS/:SetDelayed[lhs_, quoteRHS[rhs_]]:=SetDelayed[lhs,rhs]
 
 overrideMethods[trait_][methods_List, override:(Rule|RuleDelayed)[lhs_,_]]:=GeneralUtilities`Match[
   Position[methods, method_/;GeneralUtilities`EquivalentPatternQ[method, override], 1],
