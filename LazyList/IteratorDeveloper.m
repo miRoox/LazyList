@@ -43,6 +43,7 @@ $traits = <|
     "Info" -> "Base trait for all iterators.",
     "Methods" -> {
       "Setup"[___] :> Null,
+      "SummaryItems"[] :> <|"Type: " -> $IteratorType|>,
       "Next"[] -> Undefined,
       "SizeHint"[] :> Interval[{0,Infinity}],
       "Collect"[] :> defaultCollect[$IteratorSelf]

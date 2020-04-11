@@ -4,6 +4,10 @@ DeclareIterator["Constant", <|"Element"->Nothing|>]
 
 ImplementIterator["Constant", "Any", {
   "Next"[] :> $IteratorData@"Element",
+  "SummaryItems"[] :> <|
+    "Type: " -> $IteratorType,
+    "Element: " -> $IteratorData@"Element"
+  |>,
   "Setup"[args___] :> constantSetup[$IteratorData, args],
   "SizeHint"[] :> Infinity
 }]
