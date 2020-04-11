@@ -46,7 +46,7 @@ Protect[
 
 EndPackage[] (* LazyList` *)
 
-BeginPackage["LazyList`IteratorBase`", {"LazyList`"}];
+BeginPackage["LazyList`Developer`", {"LazyList`"}];
 
 Unprotect[
   DeclareIterator,
@@ -239,4 +239,4 @@ Protect[
   $IteratorType
 ];
 
-EndPackage[] (* LazyList`IteratorBase` *)
+EndPackage[] (* LazyList`Developer` *)
