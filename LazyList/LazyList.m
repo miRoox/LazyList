@@ -33,6 +33,9 @@ iter_Iterator[method_String]:=iter@method[]
 Iterator[type_,_][method_[params___]]:=GeneralUtilities`CatchFailureAndMessage[
   GeneralUtilities`ThrowFailure[Iterator::nmethod, method, Length@{params}, type]
 ]
+Iterator/:Normal[iter_Iterator]:=iter@"Collect"[]
+Iterator/:ReadList[iter_Iterator]:=iter@"Collect"[]
+Iterator/:Read[iter_Iterator]:=iter@"Next"[]
 
 (*see IteratorDeveloper*)
 IteratorTypeMatchQ[_, _]:=False
