@@ -56,8 +56,27 @@ Iterator/:MakeBoxes[iter_Iterator?System`Private`NoEntryQ, fmt_] /; BoxForm`UseI
     ],
     alwaysGrids={BoxForm`SummaryItem@{"Type: ", IteratorTypeOf@iter}}
   ];
-  BoxForm`ArrangeSummaryBox[Iterator,iter,None,alwaysGrids,sometimesGrids,fmt]
+  BoxForm`ArrangeSummaryBox[Iterator,iter,iteratorIcon,alwaysGrids,sometimesGrids,fmt]
 ]
+
+iteratorIcon=Graphics[
+  {
+    {
+      Thickness @ 0.04,
+      Circle[{-0.6, 0}, 0.2],
+      Circle[{0.6, 0}, 0.2]
+    },
+    {
+      Arrowheads @ 0.1,
+      Arrow @ BezierCurve @ {{-0.4, 0.15}, {0, 0.75}, {0.4, 0.15}},
+      Arrow @ BezierCurve @ {{-1.6, 0.15}, {-1.2, 0.75}, {-0.8, 0.15}},
+      Arrow @ BezierCurve @ {{0.8, 0.15}, {1.2, 0.75}, {1.6, 0.15}}
+    },
+    Text[Style["Next", FontSize -> 6], {0, 0.7}]
+  },
+  ImageSize -> 29.4,
+  PlotRange -> {{-1, 1}, {-1, 1}}
+];
 
 (*see IteratorDeveloper*)
 IteratorTypeMatchQ[_, _]:=False
