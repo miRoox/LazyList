@@ -169,12 +169,16 @@ doImplMethods[type_, methods_]:=GeneralUtilities`BlockProtected[{Iterator},
 substImplMethods[type_][Rule[lhs_, Undefined]]:=GeneralUtilities`ThrowFailure[ImplementIterator::require, lhs]
 substImplMethods[type_][(Rule|RuleDelayed)[lhs_, rhs_]]:=TemplateApply[
   Inactivate[
-    ($IteratorSelf:Iterator[type, $IteratorData_])[lhs]:=TemplateEvaluate[expandMethodRHS[type, rhs]],
+    (self:Iterator[type, data_])[lhs]:=TemplateEvaluate[expandMethodRHS[rhs, type, self, data]],
     SetDelayed
   ]
 ]
-SetAttributes[expandMethodRHS, HoldRest]
-expandMethodRHS[type_, rhs_]:=quoteRHS[rhs]/.{$IteratorType->type}
+SetAttributes[expandMethodRHS, {HoldAll, SequenceHold}]
+expandMethodRHS[rhs_, type_, self_, data_]:=quoteRHS[rhs]/.{
+  $IteratorType->type,
+  $IteratorSelf->self,
+  $IteratorData->data
+}
 SetAttributes[quoteRHS, {HoldAll, SequenceHold}]
 quoteRHS/:SetDelayed[lhs_, quoteRHS[rhs_]]:=SetDelayed[lhs,rhs]
 
