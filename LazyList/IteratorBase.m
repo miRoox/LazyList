@@ -149,7 +149,7 @@ instantiateType[type:ptype_[params__]]:=Block[{},
   Scan[instantiateType, {params}];
   Scan[
     DeclareIterator[type, #Data];
-    KeyValueMap[ImplementIterator[type, #1, #2]&, KeySort[#Implement, typeMoreSpecificQ]];&,
+    KeyValueMap[ImplementIterator[type, #1, #2]&, KeySort[#Implements, typeMoreSpecificQ]];&,
     KeySort[KeySelect[$typeTemplates, typeMatchQ[type, #]&], typeMoreSpecificQ]
   ]
 ]
@@ -192,10 +192,10 @@ ImplementIterator[type:$nonParamatricTypePatt, trait_String, methods_List]:=Gene
 ]
 ImplementIterator[type:_String[__String], trait_String, methods_List]:=GeneralUtilities`CatchFailureAndMessage[
   checkTraitName[trait];
-  $typeTemplates = ResourceFunction["NestedAssociate"][$typeTemplates, {type, "Implement", trait} -> methods];
+  $typeTemplates = ResourceFunction["NestedAssociate"][$typeTemplates, {type, "Implements", trait} -> methods];
 ]
 ImplementIterator[type:_String[__String], None|PatternSequence[], methods_List]:=GeneralUtilities`CatchFailureAndMessage[
-  $typeTemplates = ResourceFunction["NestedAssociate"][$typeTemplates, {type, "Implement", None} -> methods];
+  $typeTemplates = ResourceFunction["NestedAssociate"][$typeTemplates, {type, "Implements", None} -> methods];
 ]
 ImplementIterator[type_, trait_String]:=ImplementIterator[type, trait, {}]
 
