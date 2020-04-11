@@ -89,7 +89,7 @@ defaultCollect[iter_Iterator]:=Block[
   {bag=Internal`Bag[],next},
   While[
     next=iter@"Next"[];
-    next!=Nothing,
+    next=!=Nothing,
     Internal`StuffBag[bag,next]
   ];
   Internal`BagPart[bag,All]
