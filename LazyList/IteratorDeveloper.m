@@ -177,7 +177,7 @@ SetAttributes[expandMethodRHS, HoldRest]
 expandMethodRHS[type_, rhs_]:=Hold[rhs]/.{$IteratorType->type}//ReleaseHold
 
 overrideMethods[trait_][methods_List, override:(Rule|RuleDelayed)[lhs_,_]]:=GeneralUtilities`Match[
-  Position[methods, method_/;GeneralUtilities`EquivalentPatternQ[method, override]],
+  Position[methods, method_/;GeneralUtilities`EquivalentPatternQ[method, override], 1],
   {{i_}} :> ReplacePart[methods, i->override],
   {} :> GeneralUtilities`ThrowFailure[ImplementIterator::nfor, lhs, trait]
 ]
