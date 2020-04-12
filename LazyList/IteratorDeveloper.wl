@@ -35,7 +35,7 @@ ImplementIterator::require="The method `1` is required.";
 ImplementIterator::nfor="The method `1` is not for trait `2`.";
 IteratorTraitInfo::trait="Unknown trait named `1`.";
 
-Begin["`Private`"];
+Begin["`Iterator`Private`"];
 
 $traits = <|
   "Any" -> <|
@@ -246,7 +246,7 @@ IteratorSetupArgumentsCheck[type_, argnum_Integer?NonNegative, {min_Integer, max
   ]
 ]
 
-End[]; (* `Private` *)
+End[]; (* `Iterator`Private` *)
 
 Protect[
   DeclareIterator,
