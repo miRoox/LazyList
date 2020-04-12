@@ -4,7 +4,8 @@ Paclet[
   Version->"0.1.0",
   MathematicaVersion->"12.0+",
   Description->"Lazy list utilities",
-  Creator->"miRoox",
+  Creator->"miRoox <miRoox@outlook.com>",
+  URL->"https://github.com/miRoox/LazyList",
   Loading->Automatic,
   Extensions->{
     {"Kernel", Root->"Kernel", Context->"LazyList`",
