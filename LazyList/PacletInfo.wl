@@ -3,10 +3,15 @@ Paclet[
   Name->"LazyList",
   Version->"0.1.0",
   MathematicaVersion->"12.0+",
-  Description->"Lazy list",
+  Description->"Lazy list utilities",
   Creator->"miRoox",
-  Extensions->
-      {
-        {"Kernel", Root->"Kernel", Context->"LazyList`"}
+  Loading->Automatic,
+  Extensions->{
+    {"Kernel", Root->"Kernel", Context->"LazyList`",
+      Symbols->{
+        "LazyList`Iterator", "LazyList`CreateIterator",
+        "LazyList`IteratorTypeMatchQ", "LazyList`IteratorTypeOf"
       }
+    }
+  }
 ]
