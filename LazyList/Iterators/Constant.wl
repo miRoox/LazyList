@@ -8,13 +8,13 @@ ImplementIterator["Constant", "Any", {
     "Type: " -> $IteratorType,
     "Element: " -> $IteratorData@"Element"
   |>,
-  "Setup"[args___] :> constantSetup[$IteratorData, args],
+  "Setup"[args___] :> setup[$IteratorData, args],
   "SizeHint"[] :> Infinity
 }]
 ImplementIterator["Constant", "Copyable"]
 
-SetAttributes[constantSetup, HoldFirst];
-constantSetup[data_, c_]:=data@"Element"=c
-constantSetup[_, args___]:=IteratorSetupArgumentsCheck["Constant", Length@{args}, 1]
+SetAttributes[setup, HoldFirst];
+setup[data_, c_]:=data@"Element"=c
+setup[_, args___]:=IteratorSetupArgumentsCheck["Constant", Length@{args}, 1]
 
 End[]
