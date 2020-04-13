@@ -14,7 +14,9 @@ GeneralUtilities`SetUsage[DeclareIterator,
   "DeclareIterator[type$, field$] declares a new iterator type$ with data field$."
 ];
 GeneralUtilities`SetUsage[ImplementIterator,
-  "ImplementIterator[type$, trait$, methods$] implememt trait$ for the iterator type$ with the methods$."
+  "ImplementIterator[type$, trait$, methods$] implememt trait$ for the iterator type$ with the methods$.",
+  "ImplementIterator[type$, trait$] implememt trait$ for the iterator type$.",
+  "ImplementIterator[type$, methods$] implememt the iterator type$ with the methods$."
 ];
 GeneralUtilities`SetUsage[IteratorTraitInfo,
   "IteratorTraitInfo[] gives all iterator traits name.",
