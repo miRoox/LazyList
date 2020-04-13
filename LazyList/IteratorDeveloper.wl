@@ -129,13 +129,23 @@ typeMoreSpecificQ[_, _]:=False
 
 instantiateType[_?instantiatedTypeQ]:=Null
 instantiateType[type_String]:=GeneralUtilities`ThrowFailure[CreateIterator::ntype, type]
-instantiateType[type:ptype_[params__]]:=Block[{},
+instantiateType[type: _[params__]]:=Block[{cands},
   Scan[instantiateType, {params}];
-  Scan[
-    DeclareIterator[type, #Data];
-    KeyValueMap[ImplementIterator[type, #1, #2]&, KeySort[#Implements, typeMoreSpecificQ]];&,
-    KeySort[KeySelect[$typeTemplates, typeMatchQ[type, #]&], typeMoreSpecificQ]
-  ]
+  cands=KeySort[KeySelect[$typeTemplates, typeMatchQ[type, #]&], Not@*typeMoreSpecificQ];
+  Do[
+    If[KeyExistsQ[cand, "Data"],
+      DeclareIterator[type, cand[["Data"]]]
+    ],
+    {cand, cands}
+  ];
+  Do[
+    If[KeyExistsQ[cand, "Implements"],
+      KeyValueMap[ImplementIterator[type, #1, #2]&,
+        KeySort[cand[["Data"]], Not@*typeMoreSpecificQ]
+      ]
+    ],
+    {cand, cands}
+  ];
 ]
 
 GeneralUtilities`BlockProtected[{CreateIterator},
@@ -153,7 +163,7 @@ GeneralUtilities`BlockProtected[{CreateIterator},
   ]
 ]
 
-$nonParamatricTypePatt=_String|_String[params__String/;AllTrue[{params},instantiatedTypeQ]]
+$nonParamatricTypePatt=_String|_String[params__String/;AllTrue[{params},instantiatedTypeQ]];
 
 DeclareIterator[type:$nonParamatricTypePatt, field_Association]:=GeneralUtilities`CatchFailureAndMessage[
   $types = ResourceFunction["NestedAssociate"][$types, {type, "Data"} -> field];
