@@ -3,14 +3,18 @@ Begin["`Constant`Private`"]
 DeclareIterator["Constant", <|"Element"->Nothing|>]
 
 ImplementIterator["Constant", "Any", {
-  "Next"[] :> $IteratorData@"Element",
+  "Setup"[args___] :> setup[$IteratorData, args],
   "SummaryItems"[] :> <|
     "Type: " -> $IteratorType,
     "Element: " -> $IteratorData@"Element"
-  |>,
-  "Setup"[args___] :> setup[$IteratorData, args],
+  |>
+}]
+
+ImplementIterator["Constant", "Forward", {
+  "Next"[] :> $IteratorData@"Element",
   "SizeHint"[] :> Infinity
 }]
+
 ImplementIterator["Constant", "Copyable"]
 
 SetAttributes[setup, HoldFirst];

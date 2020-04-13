@@ -3,9 +3,7 @@ Begin["`Once`Private`"]
 DeclareIterator["Once", <|"Element"->Nothing|>]
 
 ImplementIterator["Once", "Any", {
-  "Next"[] :> move[$IteratorData@"Element"],
   "Setup"[args___] :> setup[$IteratorData, args],
-  "SizeHint"[] :> If[$IteratorData@"Element"===Nothing, 0, 1],
   "SummaryItems"[] :> <|
     "Type: " -> $IteratorType,
     "Element: " -> Dynamic@If[$IteratorData@"Element"===Nothing,
@@ -13,6 +11,11 @@ ImplementIterator["Once", "Any", {
       $IteratorData@"Element"
     ]
   |>
+}]
+
+ImplementIterator["Once", "Forward", {
+  "Next"[] :> move[$IteratorData@"Element"],
+  "SizeHint"[] :> If[$IteratorData@"Element"===Nothing, 0, 1]
 }]
 
 ImplementIterator["Empty", "Peekable", {

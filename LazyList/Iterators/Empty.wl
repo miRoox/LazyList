@@ -2,7 +2,9 @@ Begin["`Empty`Private`"]
 
 DeclareIterator["Empty", <||>]
 
-ImplementIterator["Empty", "Any", {
+ImplementIterator["Empty", "Any"]
+
+ImplementIterator["Empty", "Forward", {
   "Next"[] :> Nothing,
   "SizeHint"[] :> 0,
   "Collect"[] :> {}

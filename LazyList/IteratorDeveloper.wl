@@ -49,10 +49,7 @@ $traits = <|
     "Info" -> "Base trait for all iterators.",
     "Methods" -> {
       "Setup"[___] :> Null,
-      "SummaryItems"[] :> <|"Type: " -> $IteratorType|>,
-      "Next"[] -> Undefined,
-      "SizeHint"[] :> Interval[{0,Infinity}],
-      "Collect"[] :> defaultCollect[$IteratorSelf]
+      "SummaryItems"[] :> <|"Type: " -> $IteratorType|>
     }
   |>,
   "Copyable" -> <|
@@ -62,22 +59,31 @@ $traits = <|
       "Copy"[] :> Module[{$data=$IteratorData}, Iterator[$IteratorType, $data]]
     }
   |>,
-  "Peekable" -> <|
+  "Forward" -> <|
     "Deps" -> {"Any"},
+    "Info" -> "Forward iterators.",
+    "Methods" -> {
+      "Next"[] -> Undefined,
+      "SizeHint"[] :> Interval[{0,Infinity}],
+      "Collect"[] :> defaultCollect[$IteratorSelf]
+    }
+  |>,
+  "Peekable" -> <|
+    "Deps" -> {"Any", "Forward"},
     "Info" -> "Peekable iterators.",
     "Methods" -> {
       "Peek"[] -> Undefined
     }
   |>,
   "Bidirectional" -> <|
-    "Deps" -> {"Any"},
+    "Deps" -> {"Any", "Forward"},
     "Info" -> "Bidirectional iterators.",
     "Methods" -> {
       "Previous"[] -> Undefined
     }
   |>,
   "ExactSize" -> <|
-    "Deps" -> {"Any"},
+    "Deps" -> {"Any", "Forward"},
     "Info" -> "Exact size iterators.",
     "Methods" -> {
       "Length"[] :> Block[
