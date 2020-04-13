@@ -27,6 +27,10 @@ GeneralUtilities`SetUsage[IteratorSetupArgumentsCheck,
   "IteratorSetupArgumentsCheck[type$, argnum$, {min$, max$}] throws an error if argnum$ is not between min$ and max$."
 ]
 
+SyntaxInformation[DeclareIterator]={"ArgumentsPattern" -> {_, _}};
+SyntaxInformation[ImplementIterator]={"ArgumentsPattern" -> {_, _, _.}};
+SyntaxInformation[IteratorSetupArgumentsCheck]={"ArgumentsPattern" -> {_, _, _}};
+
 $IteratorSelf::usage="$IteratorSelf is a placeholder for the iterator itself.";
 $IteratorType::usage="$IteratorType is a placeholder for the type of the iterator itself.";
 $IteratorData::usage="$IteratorData is a placeholder to access the data of the iterator itself.";

@@ -25,6 +25,11 @@ GeneralUtilities`SetUsage[IteratorTypeOf,
 SetAttributes[Iterator, HoldRest];
 SetAttributes[CreateIterator, HoldAll];
 
+SyntaxInformation[Iterator]={"ArgumentsPattern" -> {_, _}};
+SyntaxInformation[CreateIterator]={"ArgumentsPattern" -> {_, ___}};
+SyntaxInformation[IteratorTypeMatchQ]={"ArgumentsPattern" -> {_, _.}};
+SyntaxInformation[IteratorTypeOf]={"ArgumentsPattern" -> {_}};
+
 Iterator::nmethod="`1` is not a known method with `2` parameters for the iterator of type `3`.";
 CreateIterator::ntype="Unknown iterator type `1`.";
 CreateIterator::cargb="Construct `1` iterator with `2` arguments; between `3` and `4` arguments are expected.";
