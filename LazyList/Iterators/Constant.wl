@@ -15,6 +15,14 @@ ImplementIterator["Constant", "Forward", {
   "SizeHint"[] :> Infinity
 }]
 
+ImplementIterator["Constant", "Peekable", {
+  "Peek"[] :> $IteratorData@"Element"
+}]
+
+ImplementIterator["Constant", "Bidirectional", {
+  "Previous"[] :> $IteratorData@"Element"
+}]
+
 ImplementIterator["Constant", "Copyable"]
 
 SetAttributes[setup, HoldFirst];
