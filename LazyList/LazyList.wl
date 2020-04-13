@@ -31,6 +31,7 @@ SyntaxInformation[IteratorTypeMatchQ]={"ArgumentsPattern" -> {_, _.}};
 SyntaxInformation[IteratorTypeOf]={"ArgumentsPattern" -> {_}};
 
 Iterator::nmethod="`1` is not a known method with `2` parameters for the iterator of type `3`.";
+Iterator::nelem="`1` cannot appear in the element of the iterator";
 CreateIterator::ntype="Unknown iterator type `1`.";
 CreateIterator::cargb="Construct `1` iterator with `2` arguments; between `3` and `4` arguments are expected.";
 CreateIterator::cargbu="Construct `1` iterator with 1 argument; between `2` and `3` arguments are expected.";

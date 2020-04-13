@@ -26,6 +26,7 @@ ImplementIterator["Constant", "Bidirectional", {
 ImplementIterator["Constant", "Copyable"]
 
 SetAttributes[setup, HoldFirst];
+setup[data_, Nothing]:=GeneralUtilities`ThrowFailure[Iterator::nelem, HoldForm@Nothing]
 setup[data_, c_]:=data@"Element"=c
 setup[_, args___]:=IteratorSetupArgumentsCheck["Constant", Length@{args}, 1]
 
