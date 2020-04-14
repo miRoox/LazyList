@@ -110,7 +110,7 @@ r:LazyRange[_]:=(
   $Failed
 )
 LazyRange[start_, stop_]/;rangeCollinearQ[start, stop, 1]:=
-    System`Private`ConstructNoEntry[LazyRange, start, Simplify[Floor@Ramp[stop-start]+start], 1]
+    System`Private`ConstructNoEntry[LazyRange, start, Simplify[Floor@minusOneClip[stop-start]+start], 1]
 r:LazyRange[_,_]:=(
   Message[LazyRange::range, HoldForm@r];
   $Failed
@@ -121,7 +121,7 @@ r:LazyRange[start_, stop_, step_]/;!rangeCollinearQ[start, stop, step]:=(
 )
 LazyRange[start_?ExactNumberQ, stop_, step_?InexactNumberQ]:=LazyRange[N@start,stop,step]
 r:LazyRange[start_, stop_, step_]/;System`Private`HoldEntryQ[r]:=
-    System`Private`ConstructNoEntry[LazyRange, start, Simplify[Ramp@Quotient[stop-start,step]*step+start], step]
+    System`Private`ConstructNoEntry[LazyRange, start, Simplify[minusOneClip@Quotient[stop-start,step]*step+start], step]
 r:LazyRange[start_, stop_, step_?PossibleZeroQ]/;System`Private`HoldEntryQ[r]:=
     System`Private`ConstructNoEntry[LazyRange, start, start, 0]
 
@@ -131,6 +131,7 @@ rangeCollinearQ[start_, stop_, step_?PossibleZeroQ]:=TrueQ[start==stop]
 rangeCollinearQ[start_, stop_, step_]:=realOrInfinityQ[(stop - start)/step]
 realOrInfinityQ[DirectedInfinity[1|-1]]:=True
 realOrInfinityQ[x_]:=TrueQ@Simplify@Element[x, Reals]
+minusOneClip[x_]:=Clip[x, {-1, Infinity}]
 
 End[]; (* `Private` *)
 
