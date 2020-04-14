@@ -125,7 +125,7 @@ r:LazyRange[start_, stop_, step_]/;System`Private`HoldEntryQ[r]:=
 r:LazyRange[start_, stop_, step_?PossibleZeroQ]/;System`Private`HoldEntryQ[r]:=
     System`Private`ConstructNoEntry[LazyRange, start, start, 0]
 
-LazyRange/:Normal[LazyRange[start_, stop_, step_]]:=Range[start, stop, step]
+LazyRange/:Normal[HoldPattern@LazyRange[start_, stop_, step_]]:=Range[start, stop, step]
 
 rangeCollinearQ[start_, stop_, step_?PossibleZeroQ]:=TrueQ[start==stop]
 rangeCollinearQ[start_, stop_, step_]:=realOrInfinityQ[(stop - start)/step]
