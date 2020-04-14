@@ -125,12 +125,52 @@ r:LazyRange[start_, stop_, step_?PossibleZeroQ]/;System`Private`HoldEntryQ[r]:=
     System`Private`ConstructNoEntry[LazyRange, start, start, 0]
 
 LazyRange/:Normal[HoldPattern@LazyRange[start_, stop_, step_]]:=Range[start, stop, step]
+LazyRange/:Length[HoldPattern@LazyRange[start_, stop_, step_]]:=If[step===0, 0, Quotient[stop-start,step]] + 1
+LazyRange/:Total[r:HoldPattern@LazyRange[start_, stop_, _]]:=(start+stop)*Length[r]/2
+LazyRange/:Part[r_LazyRange, i_Integer]:=With[{val=rangeIndex[r, i]},
+  If[val===$Failed,
+    Message[Part::partw, i, HoldForm@r];$Failed,
+    val
+  ]
+]
+LazyRange/:Part[r_LazyRange, spec_List/;VectorQ[spec, IntegerQ]]:=r[[#]]&/@spec
+LazyRange/:Part[r_LazyRange, i_;;j_;;(k_:1)]:=GeneralUtilities`CatchFailureAndMessage@rangeTake[r, {
+  If[i===All, 1, i],
+  If[j===All, -1, j],
+  If[k===All, 1, k]
+}]
+LazyRange/:Take[r_LazyRange, None]:={}
+LazyRange/:Take[r_LazyRange, All]:=r
+LazyRange/:Take[r_LazyRange, n_Integer]:=GeneralUtilities`CatchFailureAndMessage@rangeTake[r, {1 ,n}]
+LazyRange/:Take[r_LazyRange, {n_Integer}]:=GeneralUtilities`CatchFailureAndMessage@rangeTake[r, {n ,n}]
+LazyRange/:Take[r_LazyRange, {m_Integer, n_Integer}]:=GeneralUtilities`CatchFailureAndMessage@rangeTake[r, {m ,n}]
+LazyRange/:Take[r_LazyRange, {m_Integer, n_Integer, s_Integer}]:=GeneralUtilities`CatchFailureAndMessage@rangeTake[r, {m ,n, s}]
 
 rangeCollinearQ[start_, stop_, step_?PossibleZeroQ]:=TrueQ[start==stop]
 rangeCollinearQ[start_, stop_, step_]:=realOrInfinityQ[(stop - start)/step]
 realOrInfinityQ[DirectedInfinity[1|-1]]:=True
 realOrInfinityQ[x_]:=TrueQ@Simplify@Element[x, Reals]
 minusOneClip[x_]:=Clip[x, {-1, Infinity}]
+
+rangeIndex[r:HoldPattern@LazyRange[start_, _, step_], i_Integer?Positive]:=If[
+  i<=Length[r],
+  start+(i-1)*step,
+  $Failed
+]
+rangeIndex[r:HoldPattern@LazyRange[_, stop_, step_], i_Integer?Negative]:=If[
+  -i<=Length[r],
+  stop+(i+1)*step,
+  $Failed
+]
+rangeTake[r:HoldPattern@LazyRange[_, _, step_], {i_, j_, k_:1}]:=LazyRange[
+  Sequence@@Map[
+    If[#=!=$Failed, #,
+      GeneralUtilities`ThrowFailure["take", i, j, HoldForm@r]
+    ]&@*(rangeIndex[r, #]&),
+    {i, j}
+  ],
+  step*k
+]
 
 End[]; (* `Private` *)
 
