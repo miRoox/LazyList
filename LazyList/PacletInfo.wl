@@ -11,7 +11,8 @@ Paclet[
     {"Kernel", Root->"Kernel", Context->"LazyList`",
       Symbols->{
         "LazyList`Iterator", "LazyList`CreateIterator",
-        "LazyList`IteratorTypeMatchQ", "LazyList`IteratorTypeOf"
+        "LazyList`IteratorTypeMatchQ", "LazyList`IteratorTypeOf",
+        "LazyList`LazyRange"
       }
     }
   }

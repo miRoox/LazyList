@@ -4,7 +4,8 @@ BeginPackage["LazyList`"];
 
 Unprotect[
   Iterator,
-  CreateIterator
+  CreateIterator,
+  LazyRange
 ];
 
 GeneralUtilities`SetUsage[Iterator,
@@ -20,6 +21,13 @@ GeneralUtilities`SetUsage[IteratorTypeMatchQ,
 ];
 GeneralUtilities`SetUsage[IteratorTypeOf,
   "IteratorTypeOf[iterator$] returns the iterator$ type name."
+];
+GeneralUtilities`SetUsage[LazyRange,
+  "LazyRange[] constructs a range from 1 to \[Infinity] with a step size of 1.",
+  "LazyRange[stop$] constructs a range from 1 to stop$ with a step size of 1.",
+  "LazyRange[start$, stop$] constructs a range from start$ to stop$ with a step size of 1.",
+  "LazyRange[start$, stop$] constructs a range from start$ to stop$ with a step size of 1.",
+  "LazyRange[start$, stop$, step$] constructs a range from start$ to stop$ with the step$."
 ];
 
 SetAttributes[Iterator, HoldRest];
@@ -42,6 +50,7 @@ CreateIterator::cargtu="Construct `1` iterator with 1 argument; `2` or `3` argum
 CreateIterator::cargr="Construct `1` iterator with 1 argument; `2` arguments are expected.";
 CreateIterator::cargx="Construct `1` iterator with `2` arguments; 1 argument is expected.";
 CreateIterator::cargrx="Construct `1` iterator with `2` arguments; `3` arguments are expected.";
+LazyRange::range="Range specification in `1` does not have appropriate bounds.";
 
 Begin["`Private`"];
 
@@ -90,11 +99,45 @@ IteratorTypeMatchQ[type_][e_]:=IteratorTypeMatchQ[e,type]
 
 IteratorTypeOf[Iterator[type_,_]]:=type
 
+
+(* LazyRange *)
+
+LazyRange[]:=System`Private`ConstructNoEntry[LazyRange, 1, Infinity, 1]
+LazyRange[stop_]/;rangeCollinearQ[1, stop, 1]:=
+    System`Private`ConstructNoEntry[LazyRange ,1, Simplify@Floor[stop], 1]
+r:LazyRange[_]:=(
+  Message[LazyRange::range, HoldForm@r];
+  $Failed
+)
+LazyRange[start_, stop_]/;rangeCollinearQ[start, stop, 1]:=
+    System`Private`ConstructNoEntry[LazyRange, start, Simplify[Floor@Ramp[stop-start]+start], 1]
+r:LazyRange[_,_]:=(
+  Message[LazyRange::range, HoldForm@r];
+  $Failed
+)
+r:LazyRange[start_, stop_, step_]/;!rangeCollinearQ[start, stop, step]:=(
+  Message[LazyRange::range, HoldForm@r];
+  $Failed
+)
+LazyRange[start_?ExactNumberQ, stop_, step_?InexactNumberQ]:=LazyRange[N@start,stop,step]
+r:LazyRange[start_, stop_, step_]/;System`Private`HoldEntryQ[r]:=
+    System`Private`ConstructNoEntry[LazyRange, start, Simplify[Ramp@Quotient[stop-start,step]*step+start], step]
+r:LazyRange[start_, stop_, step_?PossibleZeroQ]/;System`Private`HoldEntryQ[r]:=
+    System`Private`ConstructNoEntry[LazyRange, start, start, 0]
+
+LazyRange/:Normal[LazyRange[start_, stop_, step_]]:=Range[start, stop, step]
+
+rangeCollinearQ[start_, stop_, step_?PossibleZeroQ]:=TrueQ[start==stop]
+rangeCollinearQ[start_, stop_, step_]:=realOrInfinityQ[(stop - start)/step]
+realOrInfinityQ[DirectedInfinity[1|-1]]:=True
+realOrInfinityQ[x_]:=TrueQ@Simplify@Element[x, Reals]
+
 End[]; (* `Private` *)
 
 Protect[
   Iterator,
-  CreateIterator
+  CreateIterator,
+  LazyRange
 ];
 
 EndPackage[] (* LazyList` *)
