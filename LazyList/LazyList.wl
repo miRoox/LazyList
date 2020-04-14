@@ -26,7 +26,6 @@ GeneralUtilities`SetUsage[LazyRange,
   "LazyRange[] constructs a range from 1 to \[Infinity] with a step size of 1.",
   "LazyRange[stop$] constructs a range from 1 to stop$ with a step size of 1.",
   "LazyRange[start$, stop$] constructs a range from start$ to stop$ with a step size of 1.",
-  "LazyRange[start$, stop$] constructs a range from start$ to stop$ with a step size of 1.",
   "LazyRange[start$, stop$, step$] constructs a range from start$ to stop$ with the step$."
 ];
 
