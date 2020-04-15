@@ -18,12 +18,12 @@ ImplementIterator["Once", "Forward", {
   "SizeHint"[] :> If[$IteratorData@"Element"===Nothing, 0, 1]
 }]
 
-ImplementIterator["Empty", "Peekable", {
+ImplementIterator["Once", "Peekable", {
   "Peek"[] :> $IteratorData@"Element"
 }]
 
-ImplementIterator["Empty", "Copyable"]
-ImplementIterator["Empty", "ExactSize"]
+ImplementIterator["Once", "Copyable"]
+ImplementIterator["Once", "ExactSize"]
 
 SetAttributes[move, HoldFirst];
 move[val_]:=Block[{tmp=val},
