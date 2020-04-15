@@ -102,30 +102,30 @@ IteratorTypeOf[Iterator[type_,_]]:=type
 (* LazyRange *)
 
 LazyRange[]:=System`Private`ConstructNoEntry[LazyRange, 1, Infinity, 1]
-LazyRange[stop_]/;rangeCollinearQ[1, stop, 1]:=
+HoldPattern@LazyRange[stop_]/;rangeCollinearQ[1, stop, 1]:=
     System`Private`ConstructNoEntry[LazyRange ,1, Simplify@Floor@Ramp[stop], 1]
-r:LazyRange[_]:=(
+r:HoldPattern@LazyRange[_]:=(
   Message[LazyRange::range, HoldForm@r];
   $Failed
 )
-LazyRange[start:DirectedInfinity[_], stop_]/;rangeCollinearQ[start, stop, 1]:=
+HoldPattern@LazyRange[start:DirectedInfinity[_], stop_]/;rangeCollinearQ[start, stop, 1]:=
     System`Private`ConstructNoEntry[LazyRange, Simplify[stop-Floor@minusOneClip[stop-start]], stop, 1]
-LazyRange[start_, stop_]/;rangeCollinearQ[start, stop, 1]:=
+HoldPattern@LazyRange[start_, stop_]/;rangeCollinearQ[start, stop, 1]:=
     System`Private`ConstructNoEntry[LazyRange, start, Simplify[Floor@minusOneClip[stop-start]+start], 1]
-r:LazyRange[_,_]:=(
+r:HoldPattern@LazyRange[_,_]:=(
   Message[LazyRange::range, HoldForm@r];
   $Failed
 )
-r:LazyRange[start_, stop_, step_]/;!rangeCollinearQ[start, stop, step]:=(
+r:HoldPattern@LazyRange[start_, stop_, step_]/;!rangeCollinearQ[start, stop, step]:=(
   Message[LazyRange::range, HoldForm@r];
   $Failed
 )
-LazyRange[start_?ExactNumberQ, stop_, step_?InexactNumberQ]:=LazyRange[N@start,stop,step]
-r:LazyRange[start:DirectedInfinity[_], stop_, step_]/;System`Private`HoldEntryQ[r]:=
+HoldPattern@LazyRange[start_?ExactNumberQ, stop_, step_?InexactNumberQ]:=LazyRange[N@start,stop,step]
+r:HoldPattern@LazyRange[start:DirectedInfinity[_], stop_, step_]/;System`Private`HoldEntryQ[r]:=
     System`Private`ConstructNoEntry[LazyRange, Simplify[stop-minusOneClip@Quotient[stop-start,step]*step], stop, step]
-r:LazyRange[start_, stop_, step_]/;System`Private`HoldEntryQ[r]:=
+r:HoldPattern@LazyRange[start_, stop_, step_]/;System`Private`HoldEntryQ[r]:=
     System`Private`ConstructNoEntry[LazyRange, start, Simplify[minusOneClip@Quotient[stop-start,step]*step+start], step]
-r:LazyRange[start_, stop_, step_?PossibleZeroQ]/;System`Private`HoldEntryQ[r]:=
+r:HoldPattern@LazyRange[start_, stop_, step_?PossibleZeroQ]/;System`Private`HoldEntryQ[r]:=
     System`Private`ConstructNoEntry[LazyRange, start, start, 0]
 
 LazyRange/:Normal[HoldPattern@LazyRange[start_, stop_, step_]]:=Range[start, stop, step]
