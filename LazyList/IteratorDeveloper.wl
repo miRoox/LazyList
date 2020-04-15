@@ -65,7 +65,8 @@ $traits = <|
     "Methods" -> {
       "Next"[] -> Undefined,
       "SizeHint"[] :> Interval[{0,Infinity}],
-      "Collect"[] :> defaultCollect[$IteratorSelf]
+      "Collect"[] :> defaultCollect[$IteratorSelf],
+      "Take"[n_Integer?NonNegative] :> CreateIterator["Take"[$IteratorType], $IteratorSelf, n]
     }
   |>,
   "Peekable" -> <|
