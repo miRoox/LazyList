@@ -146,6 +146,18 @@ LazyRange/:Take[r_LazyRange, {n_Integer}]:=GeneralUtilities`CatchFailureAndMessa
 LazyRange/:Take[r_LazyRange, {m_Integer, n_Integer}]:=GeneralUtilities`CatchFailureAndMessage@rangeTake[r, {m ,n}]
 LazyRange/:Take[r_LazyRange, {m_Integer, n_Integer, s_Integer}]:=GeneralUtilities`CatchFailureAndMessage@rangeTake[r, {m ,n, s}]
 
+LazyRange/:MakeBoxes[r:HoldPattern@LazyRange[start_, stop_, step_], fmt_]:=Module[
+  {alwaysGrids,sometimesGrids},
+  alwaysGrids={
+    BoxForm`SummaryItem@{"Start: ", start},
+    BoxForm`SummaryItem@{"Stop: ", stop}
+  };
+  sometimesGrids={
+    BoxForm`SummaryItem@{"Step: ", step}
+  };
+  BoxForm`ArrangeSummaryBox[LazyRange,r,None,alwaysGrids,sometimesGrids,fmt]
+]
+
 rangeCollinearQ[start_, stop_, step_?PossibleZeroQ]:=TrueQ[start==stop]
 rangeCollinearQ[start_, stop_, step_]:=realOrInfinityQ[(stop - start)/step]
 realOrInfinityQ[DirectedInfinity[1|-1]]:=True
