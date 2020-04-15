@@ -103,7 +103,7 @@ IteratorTypeOf[Iterator[type_,_]]:=type
 
 LazyRange[]:=System`Private`ConstructNoEntry[LazyRange, 1, Infinity, 1]
 LazyRange[stop_]/;rangeCollinearQ[1, stop, 1]:=
-    System`Private`ConstructNoEntry[LazyRange ,1, Simplify@Floor[stop], 1]
+    System`Private`ConstructNoEntry[LazyRange ,1, Simplify@Floor@Ramp[stop], 1]
 r:LazyRange[_]:=(
   Message[LazyRange::range, HoldForm@r];
   $Failed
