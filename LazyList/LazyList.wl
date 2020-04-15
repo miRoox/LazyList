@@ -108,6 +108,8 @@ r:LazyRange[_]:=(
   Message[LazyRange::range, HoldForm@r];
   $Failed
 )
+LazyRange[start:DirectedInfinity[_], stop_]/;rangeCollinearQ[start, stop, 1]:=
+    System`Private`ConstructNoEntry[LazyRange, Simplify[stop-Floor@minusOneClip[stop-start]], stop, 1]
 LazyRange[start_, stop_]/;rangeCollinearQ[start, stop, 1]:=
     System`Private`ConstructNoEntry[LazyRange, start, Simplify[Floor@minusOneClip[stop-start]+start], 1]
 r:LazyRange[_,_]:=(
@@ -119,6 +121,8 @@ r:LazyRange[start_, stop_, step_]/;!rangeCollinearQ[start, stop, step]:=(
   $Failed
 )
 LazyRange[start_?ExactNumberQ, stop_, step_?InexactNumberQ]:=LazyRange[N@start,stop,step]
+r:LazyRange[start:DirectedInfinity[_], stop_, step_]/;System`Private`HoldEntryQ[r]:=
+    System`Private`ConstructNoEntry[LazyRange, Simplify[stop-minusOneClip@Quotient[stop-start,step]*step], stop, step]
 r:LazyRange[start_, stop_, step_]/;System`Private`HoldEntryQ[r]:=
     System`Private`ConstructNoEntry[LazyRange, start, Simplify[minusOneClip@Quotient[stop-start,step]*step+start], step]
 r:LazyRange[start_, stop_, step_?PossibleZeroQ]/;System`Private`HoldEntryQ[r]:=
@@ -147,7 +151,7 @@ LazyRange/:Take[r_LazyRange, {m_Integer, n_Integer}]:=GeneralUtilities`CatchFail
 LazyRange/:Take[r_LazyRange, {m_Integer, n_Integer, s_Integer}]:=GeneralUtilities`CatchFailureAndMessage@rangeTake[r, {m ,n, s}]
 LazyRange/:Reverse[HoldPattern@LazyRange[start_, stop_, step_]]:=LazyRange[stop, start, -step]
 
-LazyRange/:MakeBoxes[r:HoldPattern@LazyRange[start_, stop_, step_], fmt_]:=Module[
+LazyRange/:MakeBoxes[r:HoldPattern@LazyRange[start_, stop_, step_]/;System`Private`HoldNoEntryQ[r], fmt_]:=Module[
   {alwaysGrids,sometimesGrids},
   alwaysGrids={
     BoxForm`SummaryItem@{"Start: ", start},
