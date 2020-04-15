@@ -193,7 +193,15 @@ ImplementIterator[type:$nonParamatricTypePatt, trait_String, methods_List]:=Gene
   Internal`InheritedBlock[{traitImplQ},
     traitImplQ[type, trait]=True;
     checkTraitDeps[type, trait];
-    doImplMethods[type, resolveTraitMethods[trait, methods]];
+    Block[{omethods}, (* combine with old methods *)
+      omethods=ResourceFunction["NestedLookup"][$types, {type, "Implements", trait}, {}];
+      Do[
+        omethods=GeneralUtilities`PatternAppend[omethods, method],
+        {method, methods}
+      ];
+      doImplMethods[type, resolveTraitMethods[trait, omethods]];
+      $types = ResourceFunction["NestedAssociate"][$types, {type, "Implements", trait} -> omethods];
+    ];
   ];
   traitImplQ[type, trait]=True;
 ]
