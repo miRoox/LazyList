@@ -35,14 +35,15 @@
     - [x] Previous
     - [ ] GoTo
 - [ ] RandomAccess
-    - [ ] Get
+    - [ ] Offset
+    - [ ] Ordering
 
 ## Iterator types
 
 - [x] Empty
 - [x] Constant
 - [x] Once
-- [ ] List
+- [ ] List - Begin/End Reverse
 - [ ] Range
 - [ ] Permutations
 - [ ] StreamReader

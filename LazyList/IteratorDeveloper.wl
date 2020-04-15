@@ -153,7 +153,7 @@ instantiateType[type: _[params__]]:=Block[{cands},
   Do[
     If[KeyExistsQ[cand, "Implements"],
       KeyValueMap[ImplementIterator[type, #1, #2]&,
-        KeySort[cand[["Data"]], Not@*typeMoreSpecificQ]
+        KeySort[cand[["Implements"]], Not@*typeMoreSpecificQ]
       ]
     ],
     {cand, cands}
