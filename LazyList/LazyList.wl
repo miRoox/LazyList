@@ -120,7 +120,8 @@ r:HoldPattern@LazyRange[start_, stop_, step_]/;!rangeCollinearQ[start, stop, ste
   Message[LazyRange::range, HoldForm@r];
   $Failed
 )
-HoldPattern@LazyRange[start_?ExactNumberQ, stop_, step_?InexactNumberQ]:=LazyRange[N@start,stop,step]
+HoldPattern@LazyRange[start_?ExactNumberQ, stop_, step_?InexactNumberQ]:=LazyRange[N@start, N@stop, step]
+HoldPattern@LazyRange[start_, stop_?ExactNumberQ, step_?InexactNumberQ]:=LazyRange[N@start, N@stop, step]
 r:HoldPattern@LazyRange[start:DirectedInfinity[_], stop_, step_]/;System`Private`HoldEntryQ[r]:=
     System`Private`ConstructNoEntry[LazyRange, Simplify[stop-FunctionExpand@minusOneClip@Quotient[stop-start,step]*step], stop, step]
 r:HoldPattern@LazyRange[start_, stop_, step_]/;System`Private`HoldEntryQ[r]:=
