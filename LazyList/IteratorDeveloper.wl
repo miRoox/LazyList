@@ -48,7 +48,7 @@ $traits = <|
     "Deps" -> {},
     "Info" -> "Base trait for all iterators.",
     "Methods" -> {
-      "Setup"[___] :> Null,
+      "Setup"[args___] :> IteratorSetupArgumentsCheck[$IteratorType, Length@{args}, 0],
       "SummaryItems"[] :> <|"Type: " -> $IteratorType|>
     }
   |>,
