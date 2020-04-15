@@ -145,6 +145,7 @@ LazyRange/:Take[r_LazyRange, n_Integer]:=GeneralUtilities`CatchFailureAndMessage
 LazyRange/:Take[r_LazyRange, {n_Integer}]:=GeneralUtilities`CatchFailureAndMessage@rangeTake[r, {n ,n}]
 LazyRange/:Take[r_LazyRange, {m_Integer, n_Integer}]:=GeneralUtilities`CatchFailureAndMessage@rangeTake[r, {m ,n}]
 LazyRange/:Take[r_LazyRange, {m_Integer, n_Integer, s_Integer}]:=GeneralUtilities`CatchFailureAndMessage@rangeTake[r, {m ,n, s}]
+LazyRange/:Reverse[HoldPattern@LazyRange[start_, stop_, step_]]:=LazyRange[stop, start, -step]
 
 LazyRange/:MakeBoxes[r:HoldPattern@LazyRange[start_, stop_, step_], fmt_]:=Module[
   {alwaysGrids,sometimesGrids},
