@@ -103,15 +103,15 @@ IteratorTypeOf[Iterator[type_,_]]:=type
 
 LazyRange[]:=System`Private`ConstructNoEntry[LazyRange, 1, Infinity, 1]
 HoldPattern@LazyRange[stop_]/;rangeCollinearQ[1, stop, 1]:=
-    System`Private`ConstructNoEntry[LazyRange ,1, Simplify@Floor@Ramp[stop], 1]
+    System`Private`ConstructNoEntry[LazyRange ,1, FunctionExpand@Floor@Ramp[stop], 1]
 r:HoldPattern@LazyRange[_]:=(
   Message[LazyRange::range, HoldForm@r];
   $Failed
 )
 HoldPattern@LazyRange[start:DirectedInfinity[_], stop_]/;rangeCollinearQ[start, stop, 1]:=
-    System`Private`ConstructNoEntry[LazyRange, Simplify[stop-Floor@minusOneClip[stop-start]], stop, 1]
+    System`Private`ConstructNoEntry[LazyRange, Simplify[stop-FunctionExpand@Floor@minusOneClip[stop-start]], stop, 1]
 HoldPattern@LazyRange[start_, stop_]/;rangeCollinearQ[start, stop, 1]:=
-    System`Private`ConstructNoEntry[LazyRange, start, Simplify[Floor@minusOneClip[stop-start]+start], 1]
+    System`Private`ConstructNoEntry[LazyRange, start, Simplify[start+FunctionExpand@Floor@minusOneClip[stop-start]], 1]
 r:HoldPattern@LazyRange[_,_]:=(
   Message[LazyRange::range, HoldForm@r];
   $Failed
@@ -122,9 +122,9 @@ r:HoldPattern@LazyRange[start_, stop_, step_]/;!rangeCollinearQ[start, stop, ste
 )
 HoldPattern@LazyRange[start_?ExactNumberQ, stop_, step_?InexactNumberQ]:=LazyRange[N@start,stop,step]
 r:HoldPattern@LazyRange[start:DirectedInfinity[_], stop_, step_]/;System`Private`HoldEntryQ[r]:=
-    System`Private`ConstructNoEntry[LazyRange, Simplify[stop-minusOneClip@Quotient[stop-start,step]*step], stop, step]
+    System`Private`ConstructNoEntry[LazyRange, Simplify[stop-FunctionExpand@minusOneClip@Quotient[stop-start,step]*step], stop, step]
 r:HoldPattern@LazyRange[start_, stop_, step_]/;System`Private`HoldEntryQ[r]:=
-    System`Private`ConstructNoEntry[LazyRange, start, Simplify[minusOneClip@Quotient[stop-start,step]*step+start], step]
+    System`Private`ConstructNoEntry[LazyRange, start, Simplify[start+FunctionExpand@minusOneClip@Quotient[stop-start,step]*step], step]
 r:HoldPattern@LazyRange[start_, stop_, step_?PossibleZeroQ]/;System`Private`HoldEntryQ[r]:=
     System`Private`ConstructNoEntry[LazyRange, start, start, 0]
 
@@ -166,7 +166,7 @@ LazyRange/:MakeBoxes[r:HoldPattern@LazyRange[start_, stop_, step_]/;System`Priva
 rangeCollinearQ[start_, stop_, step_?PossibleZeroQ]:=TrueQ[start==stop]
 rangeCollinearQ[start_, stop_, step_]:=realOrInfinityQ[(stop - start)/step]
 realOrInfinityQ[DirectedInfinity[1|-1]]:=True
-realOrInfinityQ[x_]:=TrueQ@Simplify@Element[x, Reals]
+realOrInfinityQ[x_]:=TrueQ@FullSimplify@Element[Chop[x], Reals]
 minusOneClip[x_]:=Clip[x, {-1, Infinity}]
 
 rangeIndex[r:HoldPattern@LazyRange[start_, _, step_], i_Integer?Positive]:=If[
