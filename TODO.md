@@ -5,6 +5,7 @@
 - [x] Any
     - [x] Setup
     - [x] SummaryItems
+    - [x] Dispose
 - [x] Forward
     - [x] Next
     - [x] SizeHint
@@ -12,7 +13,7 @@
     - [ ] Advance
     - [ ] Map
     - [ ] Select
-    - [ ] Take
+    - [x] Take
     - [ ] TakeWhile
     - [ ] Drop
     - [ ] DropWhile
@@ -54,7 +55,7 @@
 
 - [ ] Map[Any]
 - [ ] Select[Any]
-- [ ] Take[Any]
+- [x] Take[Any]
 - [ ] TakeWhile[Any]
 - [ ] Drop[Any]
 - [ ] DropWhile[Any]
