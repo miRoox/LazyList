@@ -16,12 +16,7 @@ ImplementIterator["Take"["Forward"], "Forward", {
     $IteratorData[["Delegate"]]@"Next"[],
     Nothing
   ],
-  "SizeHint"[] :> Interval@{0, $IteratorData[["Count"]]},
-  "Take"[n_Integer?NonNegative] :> Block[
-    {new=CreateIterator[$IteratorType, $IteratorData[["Delegate"]], Min[$IteratorData[["Count"]], n]]},
-    $IteratorSelf@"Dispose"[];
-    new
-  ]
+  "SizeHint"[] :> Interval@{0, $IteratorData[["Count"]]}
 }]
 
 ImplementIterator["Take"["Peekable"], "Peekable", {
