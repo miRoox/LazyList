@@ -9,27 +9,27 @@ ImplementIterator["Successors", "Any", {
   "Setup"[args___] :> setup[$IteratorData, args],
   "SummaryItems"[] :> <|
     "Type: " -> $IteratorType,
-    "Succ: " -> DynamicIteratorItem@$IteratorData@"Succ",
-    "Next: " -> DynamicIteratorItem@Dynamic@If[$IteratorData@"Next"===Nothing,
+    "Succ: " -> DynamicIteratorItem@$IteratorData[["Succ"]],
+    "Next: " -> DynamicIteratorItem@Dynamic@If[$IteratorData[["Next"]]===Nothing,
       Missing["Exhausted"],
-      $IteratorData@"Next"
+      $IteratorData[["Next"]]
     ]
   |>
 }]
 
 ImplementIterator["Successors", "Forward", {
-  "Next"[] :> Block[{item=$IteratorData@"Next"},
+  "Next"[] :> Block[{item=$IteratorData[["Next"]]},
     If[item===Nothing,
       Nothing,
-      $IteratorData@"Next"=($IteratorData@"Succ")[item];
+      $IteratorData[["Next"]]=$IteratorData[["Succ"]][item];
       item
     ]
   ],
-  "SizeHint"[] :> If[$IteratorData@"Next"===Nothing, 0, Interval[{1,Infinity}]]
+  "SizeHint"[] :> If[$IteratorData[["Next"]]===Nothing, 0, Interval[{1,Infinity}]]
 }]
 
 ImplementIterator["Empty", "Peekable", {
-  "Peek"[] :> $IteratorData@"Next"
+  "Peek"[] :> $IteratorData[["Next"]]
 }]
 
 ImplementIterator["Empty", "Copyable"]

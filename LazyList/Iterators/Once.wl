@@ -6,20 +6,20 @@ ImplementIterator["Once", "Any", {
   "Setup"[args___] :> setup[$IteratorData, args],
   "SummaryItems"[] :> <|
     "Type: " -> $IteratorType,
-    "Element: " -> DynamicIteratorItem@Dynamic@If[$IteratorData@"Element"===Nothing,
+    "Element: " -> DynamicIteratorItem@Dynamic@If[$IteratorData[["Element"]]===Nothing,
       Missing["Exhausted"],
-      $IteratorData@"Element"
+      $IteratorData[["Element"]]
     ]
   |>
 }]
 
 ImplementIterator["Once", "Forward", {
-  "Next"[] :> move[$IteratorData@"Element"],
-  "SizeHint"[] :> If[$IteratorData@"Element"===Nothing, 0, 1]
+  "Next"[] :> move[$IteratorData[["Element"]]],
+  "SizeHint"[] :> If[$IteratorData[["Element"]]===Nothing, 0, 1]
 }]
 
 ImplementIterator["Once", "Peekable", {
-  "Peek"[] :> $IteratorData@"Element"
+  "Peek"[] :> $IteratorData[["Element"]]
 }]
 
 ImplementIterator["Once", "Copyable"]

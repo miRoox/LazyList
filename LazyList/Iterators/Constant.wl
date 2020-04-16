@@ -6,21 +6,21 @@ ImplementIterator["Constant", "Any", {
   "Setup"[args___] :> setup[$IteratorData, args],
   "SummaryItems"[] :> <|
     "Type: " -> $IteratorType,
-    "Element: " -> DynamicIteratorItem@$IteratorData@"Element"
+    "Element: " -> DynamicIteratorItem@$IteratorData[["Element"]]
   |>
 }]
 
 ImplementIterator["Constant", "Forward", {
-  "Next"[] :> $IteratorData@"Element",
+  "Next"[] :> $IteratorData[["Element"]],
   "SizeHint"[] :> Infinity
 }]
 
 ImplementIterator["Constant", "Peekable", {
-  "Peek"[] :> $IteratorData@"Element"
+  "Peek"[] :> $IteratorData[["Element"]]
 }]
 
 ImplementIterator["Constant", "Bidirectional", {
-  "Previous"[] :> $IteratorData@"Element"
+  "Previous"[] :> $IteratorData[["Element"]]
 }]
 
 ImplementIterator["Constant", "Copyable"]
