@@ -29,13 +29,17 @@ GeneralUtilities`SetUsage[LazyRange,
   "LazyRange[start$, stop$, step$] constructs a range from start$ to stop$ with the step$."
 ];
 
-SetAttributes[Iterator, HoldRest];
-SetAttributes[CreateIterator, HoldAll];
+SetAttributes[Iterator, {HoldRest, ReadProtected}];
+SetAttributes[CreateIterator, ReadProtected];
+SetAttributes[IteratorTypeMatchQ, ReadProtected];
+SetAttributes[IteratorTypeOf, ReadProtected];
+SetAttributes[LazyRange, ReadProtected];
 
 SyntaxInformation[Iterator]={"ArgumentsPattern" -> {_, _}};
 SyntaxInformation[CreateIterator]={"ArgumentsPattern" -> {_, ___}};
 SyntaxInformation[IteratorTypeMatchQ]={"ArgumentsPattern" -> {_, _.}};
 SyntaxInformation[IteratorTypeOf]={"ArgumentsPattern" -> {_}};
+SyntaxInformation[LazyRange]={"ArgumentsPattern" -> {_., _., _.}};
 
 Iterator::nmethod="`1` is not a known method with `2` parameters for the iterator of type `3`.";
 Iterator::nelem="`1` cannot appear in the element of the iterator";

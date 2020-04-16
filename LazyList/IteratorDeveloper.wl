@@ -27,13 +27,18 @@ GeneralUtilities`SetUsage[IteratorSetupArgumentsCheck,
   "IteratorSetupArgumentsCheck[type$, argnum$, {min$, max$}] throws an error if argnum$ is not between min$ and max$."
 ]
 
-SyntaxInformation[DeclareIterator]={"ArgumentsPattern" -> {_, _}};
-SyntaxInformation[ImplementIterator]={"ArgumentsPattern" -> {_, _, _.}};
-SyntaxInformation[IteratorSetupArgumentsCheck]={"ArgumentsPattern" -> {_, _, _}};
-
 $IteratorSelf::usage="$IteratorSelf is a placeholder for the iterator itself.";
 $IteratorType::usage="$IteratorType is a placeholder for the type of the iterator itself.";
 $IteratorData::usage="$IteratorData is a placeholder to access the data of the iterator itself.";
+
+SetAttributes[DeclareIterator, ReadProtected];
+SetAttributes[ImplementIterator, ReadProtected];
+SetAttributes[IteratorTraitInfo, ReadProtected];
+SetAttributes[IteratorSetupArgumentsCheck, ReadProtected];
+
+SyntaxInformation[DeclareIterator]={"ArgumentsPattern" -> {_, _}};
+SyntaxInformation[ImplementIterator]={"ArgumentsPattern" -> {_, _, _.}};
+SyntaxInformation[IteratorSetupArgumentsCheck]={"ArgumentsPattern" -> {_, _, _}};
 
 ImplementIterator::trait="Unknown trait named `1`.";
 ImplementIterator::mdeps="The dependencies `2` for `1` is missing.";
