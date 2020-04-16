@@ -14,7 +14,7 @@ ImplementIterator["Once", "Any", {
 }]
 
 ImplementIterator["Once", "Forward", {
-  "Next"[] :> MoveItem[$IteratorData@"Element"],
+  "Next"[] :> move[$IteratorData@"Element"],
   "SizeHint"[] :> If[$IteratorData@"Element"===Nothing, 0, 1]
 }]
 
@@ -24,6 +24,12 @@ ImplementIterator["Once", "Peekable", {
 
 ImplementIterator["Once", "Copyable"]
 ImplementIterator["Once", "ExactSize"]
+
+SetAttributes[move, HoldFirst];
+move[val_]:=Block[{tmp=val},
+  val=Nothing;
+  tmp
+]
 
 SetAttributes[setup, HoldFirst];
 setup[data_, val_]:=data@"Element"=val

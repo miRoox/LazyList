@@ -25,11 +25,7 @@ GeneralUtilities`SetUsage[IteratorTraitInfo,
 GeneralUtilities`SetUsage[IteratorSetupArgumentsCheck,
   "IteratorSetupArgumentsCheck[type$, argnum$, num$] throws an error if argnum$ and num$ are not equal.",
   "IteratorSetupArgumentsCheck[type$, argnum$, {min$, max$}] throws an error if argnum$ is not between min$ and max$."
-];
-GeneralUtilities`SetUsage[MoveItem,
-  "MoveItem[val$] returns val$, and assgins val$ to Nothing.",
-  "MoveItem[val$, def$] returns val$, and assgins val$ to def$."
-];
+]
 
 $IteratorSelf::usage="$IteratorSelf is a placeholder for the iterator itself.";
 $IteratorType::usage="$IteratorType is a placeholder for the type of the iterator itself.";
@@ -39,12 +35,10 @@ SetAttributes[DeclareIterator, ReadProtected];
 SetAttributes[ImplementIterator, ReadProtected];
 SetAttributes[IteratorTraitInfo, ReadProtected];
 SetAttributes[IteratorSetupArgumentsCheck, ReadProtected];
-SetAttributes[MoveItem, {ReadProtected, HoldFirst}]
 
 SyntaxInformation[DeclareIterator]={"ArgumentsPattern" -> {_, _}};
 SyntaxInformation[ImplementIterator]={"ArgumentsPattern" -> {_, _, _.}};
 SyntaxInformation[IteratorSetupArgumentsCheck]={"ArgumentsPattern" -> {_, _, _}};
-SyntaxInformation[MoveItem]={"ArgumentsPattern" -> {_, _.}};
 
 ImplementIterator::trait="Unknown trait named `1`.";
 ImplementIterator::mdeps="The dependencies `2` for `1` is missing.";
@@ -290,15 +284,6 @@ IteratorSetupArgumentsCheck[type_, argnum_Integer?NonNegative, {min_Integer, max
       GeneralUtilities`ThrowFailure[CreateIterator::cargb, type, argnum, min, max]
     ]
   ]
-]
-
-MoveItem[val_, Unset]:=Block[{tmp=val},
-  val=.;
-  tmp
-]
-MoveItem[val_, def_:Nothing]:=Block[{tmp=val},
-  val=def;
-  tmp
 ]
 
 End[]; (* `Iterator`Private` *)
