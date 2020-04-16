@@ -77,6 +77,15 @@ Iterator/:MakeBoxes[iter_Iterator?System`Private`NoEntryQ, fmt_] /; BoxForm`UseI
   BoxForm`ArrangeSummaryBox[Iterator,iter,iteratorIcon,alwaysGrids,sometimesGrids,fmt]
 ]
 
+SetAttributes[mutIterator, HoldAllComplete];
+doUnset=False;
+mutIterator[Unset[iter_]]/;!TrueQ@doUnset:=(
+  iter@"Dispose"[];
+  Block[{doUnset=True}, Unset[iter]]
+)
+mutIterator[___]:=Language`MutationFallthrough
+Language`SetMutationHandler[Iterator, mutIterator]
+
 iteratorIcon=Graphics[
   {
     {
