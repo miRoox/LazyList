@@ -61,7 +61,10 @@ $traits = <|
     "Methods" -> {
       "Setup"[args___] :> IteratorSetupArgumentsCheck[$IteratorType, Length@{args}, 0],
       "Dispose"[] :> Unset[$IteratorData],
-      "SummaryItems"[] :> <|"Type: " -> $IteratorType|>
+      "SummaryItems"[] :> <|
+        "Type: " -> $IteratorType,
+        "Dropped: " -> Dynamic[!ValueQ@$IteratorData]
+      |>
     }
   |>,
   "Copyable" -> <|

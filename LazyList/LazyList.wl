@@ -65,14 +65,17 @@ Iterator[type_,_][method_[params___]]:=GeneralUtilities`CatchFailureAndMessage[
 Iterator/:Normal[iter_Iterator]:=iter@"Collect"[]
 Iterator/:ReadList[iter_Iterator]:=iter@"Collect"[]
 Iterator/:Read[iter_Iterator]:=iter@"Next"[]
-Iterator/:MakeBoxes[iter_Iterator?System`Private`NoEntryQ, fmt_] /; BoxForm`UseIcons := Module[
+Iterator/:MakeBoxes[iter:HoldPattern@Iterator[type_, data_]?System`Private`NoEntryQ, fmt_] /; BoxForm`UseIcons := Module[
   {items=iter@"SummaryItems"[],alwaysGrids,sometimesGrids={}},
   If[AssociationQ[items],
     {alwaysGrids,sometimesGrids}=Map[
       KeyValueMap[BoxForm`SummaryItem@*List],
       TakeDrop[items,UpTo[2]]
     ],
-    alwaysGrids={BoxForm`SummaryItem@{"Type: ", IteratorTypeOf@iter}}
+    alwaysGrids={
+      BoxForm`SummaryItem@{"Type: ", type},
+      BoxForm`SummaryItem@{"Dropped: ", Dynamic[!ValueQ@data]}
+    }
   ];
   BoxForm`ArrangeSummaryBox[Iterator,iter,iteratorIcon,alwaysGrids,sometimesGrids,fmt]
 ]
