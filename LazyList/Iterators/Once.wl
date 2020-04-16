@@ -6,7 +6,7 @@ ImplementIterator["Once", "Any", {
   "Setup"[args___] :> setup[$IteratorData, args],
   "SummaryItems"[] :> <|
     "Type: " -> $IteratorType,
-    "Element: " -> Dynamic@If[$IteratorData@"Element"===Nothing,
+    "Element: " -> DynamicIteratorItem@Dynamic@If[$IteratorData@"Element"===Nothing,
       Missing["Exhausted"],
       $IteratorData@"Element"
     ]

@@ -6,7 +6,7 @@ ImplementIterator["Take"["Any"], "Any", {
   "Setup"[args___] :> setup[$IteratorData, args],
   "SummaryItems"[] :> <|
     "Type: " -> $IteratorType,
-    "Count: " -> Dynamic[$IteratorData@"Count"]
+    "Count: " -> DynamicIteratorItem@Dynamic[$IteratorData@"Count"]
   |>
 }]
 

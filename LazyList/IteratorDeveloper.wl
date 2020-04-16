@@ -25,7 +25,10 @@ GeneralUtilities`SetUsage[IteratorTraitInfo,
 GeneralUtilities`SetUsage[IteratorSetupArgumentsCheck,
   "IteratorSetupArgumentsCheck[type$, argnum$, num$] throws an error if argnum$ and num$ are not equal.",
   "IteratorSetupArgumentsCheck[type$, argnum$, {min$, max$}] throws an error if argnum$ is not between min$ and max$."
-]
+];
+GeneralUtilities`SetUsage[DynamicIteratorItem,
+  "DynamicIteratorItem[expr$] is an iterator macro that displays expr$ if the iterator is not dropped, otherwise show Missing['Dropped']."
+];
 
 $IteratorSelf::usage="$IteratorSelf is a placeholder for the iterator itself.";
 $IteratorType::usage="$IteratorType is a placeholder for the type of the iterator itself.";
@@ -35,10 +38,12 @@ SetAttributes[DeclareIterator, ReadProtected];
 SetAttributes[ImplementIterator, ReadProtected];
 SetAttributes[IteratorTraitInfo, ReadProtected];
 SetAttributes[IteratorSetupArgumentsCheck, ReadProtected];
+SetAttributes[DynamicIteratorItem, HoldFirst];
 
 SyntaxInformation[DeclareIterator]={"ArgumentsPattern" -> {_, _}};
 SyntaxInformation[ImplementIterator]={"ArgumentsPattern" -> {_, _, _.}};
 SyntaxInformation[IteratorSetupArgumentsCheck]={"ArgumentsPattern" -> {_, _, _}};
+SyntaxInformation[DynamicIteratorItem]={"ArgumentsPattern" -> {_}};
 
 ImplementIterator::trait="Unknown trait named `1`.";
 ImplementIterator::mdeps="The dependencies `2` for `1` is missing.";
@@ -244,10 +249,17 @@ substImplMethods[type_][(Rule|RuleDelayed)[lhs_, rhs_]]:=TemplateApply[
   ]
 ]
 SetAttributes[expandMethodRHS, {HoldAll, SequenceHold}]
-expandMethodRHS[rhs_, type_, self_, data_]:=quoteRHS[rhs]/.{
+expandMethodRHS[rhs_, type_, self_, data_]:=quoteRHS[rhs]//.{
   $IteratorType->type,
   $IteratorSelf->self,
-  $IteratorData->data
+  $IteratorData->data,
+  DynamicIteratorItem[expr_] :> PaneSelector[
+    {
+      True -> expr,
+      False -> Missing["Dropped"]
+    },
+    Dynamic[AssociationQ@data]
+  ]
 }
 SetAttributes[quoteRHS, {HoldAll, SequenceHold}]
 quoteRHS/:SetDelayed[lhs_, quoteRHS[rhs_]]:=SetDelayed[lhs,rhs]
