@@ -244,7 +244,7 @@ doImplMethods[type_, methods_]:=GeneralUtilities`BlockProtected[{Iterator},
 substImplMethods[type_][Rule[lhs_, Undefined]]:=GeneralUtilities`ThrowFailure[ImplementIterator::require, lhs]
 substImplMethods[type_][(Rule|RuleDelayed)[lhs_, rhs_]]:=TemplateApply[
   Inactivate[
-    (self:Iterator[type, data_])[lhs]:=TemplateEvaluate[expandMethodRHS[rhs, type, self, data]],
+    (self:Iterator[type, data_?AssociationQ])[lhs]:=TemplateEvaluate[expandMethodRHS[rhs, type, self, data]],
     SetDelayed
   ]
 ]

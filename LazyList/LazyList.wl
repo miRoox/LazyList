@@ -42,7 +42,8 @@ SyntaxInformation[IteratorTypeOf]={"ArgumentsPattern" -> {_}};
 SyntaxInformation[LazyRange]={"ArgumentsPattern" -> {_., _., _.}};
 
 Iterator::nmethod="`1` is not a known method with `2` parameters for the iterator of type `3`.";
-Iterator::nelem="`1` cannot appear in the element of the iterator";
+Iterator::dropped="`1` has been dropped.";
+Iterator::nelem="`1` cannot appear in the element of the iterator.";
 CreateIterator::ntype="Unknown iterator type `1`.";
 CreateIterator::cargb="Construct `1` iterator with `2` arguments; between `3` and `4` arguments are expected.";
 CreateIterator::cargbu="Construct `1` iterator with 1 argument; between `2` and `3` arguments are expected.";
@@ -59,6 +60,9 @@ Begin["`Private`"];
 
 (*see IteratorDeveloper*)
 iter_Iterator[method_String]:=iter@method[]
+(iter:Iterator[_,data_/;!AssociationQ[data]])[method_[params___]]:=GeneralUtilities`CatchFailureAndMessage[
+  GeneralUtilities`ThrowFailure[Iterator::dropped, HoldForm@iter]
+]
 Iterator[type_,_][method_[params___]]:=GeneralUtilities`CatchFailureAndMessage[
   GeneralUtilities`ThrowFailure[Iterator::nmethod, method, Length@{params}, type]
 ]
