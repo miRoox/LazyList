@@ -5,6 +5,7 @@ BeginPackage["LazyList`"];
 Unprotect[
   Iterator,
   CreateIterator,
+  MoveIterator,
   LazyRange
 ];
 
@@ -14,6 +15,9 @@ GeneralUtilities`SetUsage[Iterator,
 GeneralUtilities`SetUsage[CreateIterator,
   "CreateIterator[expr$] creates a new iterator object from expr$.",
   "CreateIterator[type$, args$$] creates a new iterator object."
+];
+GeneralUtilities`SetUsage[MoveIterator,
+  "MoveIterator[iter$] move the ownership of iter$ to a new iterator."
 ];
 GeneralUtilities`SetUsage[IteratorTypeMatchQ,
   "IteratorTypeQ[iter$, type$] returns True if iter$ is an iterator of the type$, and return False otherwise.",
@@ -31,12 +35,14 @@ GeneralUtilities`SetUsage[LazyRange,
 
 SetAttributes[Iterator, {HoldRest, ReadProtected}];
 SetAttributes[CreateIterator, ReadProtected];
+SetAttributes[MoveIterator, ReadProtected];
 SetAttributes[IteratorTypeMatchQ, ReadProtected];
 SetAttributes[IteratorTypeOf, ReadProtected];
 SetAttributes[LazyRange, ReadProtected];
 
 SyntaxInformation[Iterator]={"ArgumentsPattern" -> {_, _}};
 SyntaxInformation[CreateIterator]={"ArgumentsPattern" -> {_, ___}};
+SyntaxInformation[MoveIterator]={"ArgumentsPattern" -> {_}};
 SyntaxInformation[IteratorTypeMatchQ]={"ArgumentsPattern" -> {_, _.}};
 SyntaxInformation[IteratorTypeOf]={"ArgumentsPattern" -> {_}};
 SyntaxInformation[LazyRange]={"ArgumentsPattern" -> {_., _., _.}};
@@ -103,6 +109,13 @@ iteratorIcon=Graphics[
   ImageSize -> 29.4,
   PlotRange -> {{-1, 1}, {-1, 1}}
 ];
+
+MoveIterator[iter:HoldPattern@Iterator[type_, data_?AssociationQ]]:=Module[
+  {$data = data},
+  Unset[data];
+  System`Private`SetNoEntry@Iterator[type, $data]
+]
+MoveIterator[iter_Iterator]:=iter
 
 (*see IteratorDeveloper*)
 IteratorTypeMatchQ[_, _]:=False
@@ -207,6 +220,7 @@ End[]; (* `Private` *)
 Protect[
   Iterator,
   CreateIterator,
+  MoveIterator,
   LazyRange
 ];
 
