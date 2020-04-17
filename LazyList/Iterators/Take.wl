@@ -1,6 +1,6 @@
 Begin["`Take`Private`"]
 
-DeclareIterator["Take"["Any"], <|"Delegate"->Nothing, "Count"->0|>]
+DeclareIterator["Take"["Any"], <|"Iter"->Nothing, "Count"->0|>]
 
 ImplementIterator["Take"["Any"], "Any", {
   "Setup"[args___] :> setup[$IteratorData, args],
@@ -13,26 +13,26 @@ ImplementIterator["Take"["Any"], "Any", {
 ImplementIterator["Take"["Forward"], "Forward", {
   "Next"[] :> If[$IteratorData[["Count"]] > 0,
     --$IteratorData[["Count"]];
-    $IteratorData[["Delegate"]]@"Next"[],
+    $IteratorData[["Iter"]]@"Next"[],
     Nothing
   ],
   "SizeHint"[] :> Interval@{0, $IteratorData[["Count"]]}
 }]
 
 ImplementIterator["Take"["Peekable"], "Peekable", {
-  "Peek"[] :> $IteratorData[["Delegate"]]@"Peek"[]
+  "Peek"[] :> $IteratorData[["Iter"]]@"Peek"[]
 }]
 
 ImplementIterator["Take"["Copyable"], "Copyable"]
 
 ImplementIterator["Take"["ExactSize"], "Forward", {
-  "SizeHint"[] :> Min[$IteratorData[["Count"]], $IteratorData[["Delegate"]]@"SizeHint"[]]
+  "SizeHint"[] :> Min[$IteratorData[["Count"]], $IteratorData[["Iter"]]@"SizeHint"[]]
 }]
 ImplementIterator["Take"["ExactSize"], "ExactSize"]
 
 SetAttributes[setup, HoldFirst];
 setup[data_, delegate_, n_]:=(
-  data@"Delegate"=delegate;
+  data@"Iter"=delegate;
   data@"Count"=n;
 )
 setup[_, args___]:=IteratorSetupArgumentsCheck["Take", Length@{args}, 2]
