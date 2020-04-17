@@ -65,6 +65,7 @@ Iterator[type_,_][method_[params___]]:=GeneralUtilities`CatchFailureAndMessage[
 Iterator/:Normal[iter_Iterator]:=iter@"Collect"[]
 Iterator/:ReadList[iter_Iterator]:=iter@"Collect"[]
 Iterator/:Read[iter_Iterator]:=iter@"Next"[]
+Iterator/:Close[iter_Iterator]:=iter@"Dispose"[]
 Iterator/:MakeBoxes[iter:HoldPattern@Iterator[type_, data_]?System`Private`NoEntryQ, fmt_] /; BoxForm`UseIcons := Module[
   {items=iter@"SummaryItems"[],alwaysGrids,sometimesGrids={}},
   If[AssociationQ[items],
@@ -79,15 +80,6 @@ Iterator/:MakeBoxes[iter:HoldPattern@Iterator[type_, data_]?System`Private`NoEnt
   ];
   BoxForm`ArrangeSummaryBox[Iterator,iter,iteratorIcon,alwaysGrids,sometimesGrids,fmt]
 ]
-
-SetAttributes[mutIterator, HoldAllComplete];
-doUnset=False;
-mutIterator[Unset[iter_]]/;!TrueQ@doUnset:=(
-  iter@"Dispose"[];
-  Block[{doUnset=True}, Unset[iter]]
-)
-mutIterator[___]:=Language`MutationFallthrough
-Language`SetMutationHandler[Iterator, mutIterator]
 
 iteratorIcon=Graphics[
   {
