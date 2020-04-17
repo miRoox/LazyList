@@ -9,7 +9,7 @@ ImplementIterator["Successors", "Any", {
   "Setup"[args___] :> setup[$IteratorData, args],
   "SummaryItems"[] :> <|
     "Type: " -> $IteratorType,
-    "Succ: " -> DynamicIteratorItem@$IteratorData[["Succ"]],
+    "Succ: " -> $IteratorData[["Succ"]],
     "Next: " -> DynamicIteratorItem@Dynamic@If[$IteratorData[["Next"]]===Nothing,
       Missing["Exhausted"],
       $IteratorData[["Next"]]
