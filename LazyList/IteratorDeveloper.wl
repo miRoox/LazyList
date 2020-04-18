@@ -59,7 +59,7 @@ $traits = <|
     "Info" -> "Base trait for all iterators.",
     "Methods" -> {
       "Setup"[args___] :> IteratorSetupArgumentsCheck[$IteratorType, Length@{args}, 0],
-      "Dispose"[] :> Unset[$IteratorData],
+      "Dispose"[] :> Null,
       "SummaryItems"[] :> <|
         "Type: " -> $IteratorType,
         "Dropped: " -> Dynamic[!ValueQ@$IteratorData]

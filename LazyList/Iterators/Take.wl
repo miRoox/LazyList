@@ -9,7 +9,7 @@ ImplementIterator["Take"["Any"], "Any", {
     "Count: " -> DynamicIteratorItem@Dynamic[$IteratorData[["Count"]]],
     "From: " -> DynamicIteratorItem@$IteratorData[["Iter"]]
   |>,
-  "Dispose"[] :> ($IteratorData[["Iter"]]@"Dispose"[]; Unset[$IteratorData])
+  "Dispose"[] :> $IteratorData[["Iter"]]@"Dispose"[]
 }]
 
 ImplementIterator["Take"["Forward"], "Forward", {
