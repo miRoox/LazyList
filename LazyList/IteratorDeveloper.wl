@@ -137,7 +137,7 @@ instantiatedTypeQ[t_]:=KeyExistsQ[$types, t]
 traitImplQ[_, _]:=False
 
 GeneralUtilities`BlockProtected[{IteratorTypeMatchQ},
-  IteratorTypeMatchQ[Iterator[itype_,_], type_]:=typeMatchQ[itype, type]
+  IteratorTypeMatchQ[iter:Iterator[itype_,_Symbol]/;System`Private`HoldNoEntryQ[iter], type_]:=typeMatchQ[itype, type]
 ]
 
 typeMatchQ[type_, type_]:=True
