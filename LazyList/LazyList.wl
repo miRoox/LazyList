@@ -109,9 +109,9 @@ iteratorIcon=Graphics[
   PlotRange -> {{-1, 1}, {-1, 1}}
 ];
 
-MoveIterator[iter:HoldPattern@Iterator[type_, data_?AssociationQ]]:=Module[
+MoveIterator[iter:HoldPattern@Iterator[type_, data_Symbol?AssociationQ]]:=Module[
   {$data = data},
-  Unset[data];
+  Remove[data];
   System`Private`SetNoEntry@Iterator[type, $data]
 ]
 MoveIterator[iter_Iterator]:=iter
