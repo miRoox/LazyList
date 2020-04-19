@@ -4,7 +4,10 @@
 Print["Wolfram Language Version: ", $Version];
 Print["Running tests...","\n"];
 
-CloudConnect[];
+If[FailureQ@Environment["WOLFRAM_ID"],
+  CloudConnect[],
+  CloudConnect[Environment["WOLFRAM_ID"], Environment["WOLFRAM_PASS"]]
+];
 If[!TrueQ@$CloudConnected,
   Print["Cloud connection failed!"];
   Exit[1]
