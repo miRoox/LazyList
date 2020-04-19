@@ -70,7 +70,7 @@ $traits = <|
     "Deps" -> {"Any"},
     "Info" -> "Copyable iterators.",
     "Methods" -> {
-      "Copy"[] :> Module[{$data=$IteratorData}, Iterator[$IteratorType, $data]]
+      "Copy"[] :> Module[{$data=$IteratorData}, System`Private`SetNoEntry@Iterator[$IteratorType, $data]]
     }
   |>,
   "Forward" -> <|
