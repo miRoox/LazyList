@@ -4,6 +4,12 @@
 Print["Wolfram Language Version: ", $Version];
 Print["Running tests...","\n"];
 
+CloudConnect[];
+If[!TrueQ@$CloudConnected,
+  Print["Cloud connection failed!"];
+  Exit[1]
+]
+
 $baseDir=DirectoryName[$InputFileName]
 
 AppendTo[$Path, $baseDir];
