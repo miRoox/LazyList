@@ -40,7 +40,7 @@ Module[{report, time, results, failIdx},
     ,
     Print["  ", Length[failIdx], " tests failed!"];
     Do[
-      Print["  ", i, " | ", results[i]["Outcome"], " | ", results[i]["TestID"]],
+      Print@TextString@Row[Values@results[i][{"TestIndex", "TestID", "Outcome", "ActualMessages", "ActualOutput"}], " | "],
       {i, failIdx}
     ];
     Exit[1]
