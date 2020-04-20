@@ -49,7 +49,7 @@ Begin["`Iterator`Private`"];
 
 $traits = <|
   "Any" -> <|
-    "Deps" -> {},
+    "Super" -> {},
     "Methods" -> {
       "Setup"[args___] :> IteratorSetupArgumentsCheck[$IteratorType, Length@{args}, 0],
       "Dispose"[] :> Null,
@@ -60,13 +60,13 @@ $traits = <|
     }
   |>,
   "Copyable" -> <|
-    "Deps" -> {"Any"},
+    "Super" -> {"Any"},
     "Methods" -> {
       "Copy"[] :> Module[{$data=$IteratorData}, System`Private`SetNoEntry@Iterator[$IteratorType, $data]]
     }
   |>,
   "Forward" -> <|
-    "Deps" -> {"Any"},
+    "Super" -> {"Any"},
     "Methods" -> {
       "Next"[] -> Undefined,
       "SizeHint"[] :> Interval[{0,Infinity}],
@@ -75,19 +75,19 @@ $traits = <|
     }
   |>,
   "Peekable" -> <|
-    "Deps" -> {"Any", "Forward"},
+    "Super" -> {"Any", "Forward"},
     "Methods" -> {
       "Peek"[] -> Undefined
     }
   |>,
   "Bidirectional" -> <|
-    "Deps" -> {"Any", "Forward"},
+    "Super" -> {"Any", "Forward"},
     "Methods" -> {
       "Previous"[] -> Undefined
     }
   |>,
   "ExactSize" -> <|
-    "Deps" -> {"Any", "Forward"},
+    "Super" -> {"Any", "Forward"},
     "Methods" -> {
       "Length"[] :> Block[
         {len=$IteratorSelf@"SizeHint"[]},
@@ -130,7 +130,7 @@ typeMatchQ[_, _]:=False
 
 typeMoreSpecificQ[_?instantiatedTypeQ, _]:=True
 typeMoreSpecificQ[_[__], _?traitQ]:=True
-typeMoreSpecificQ[t1_?traitQ, t2_?traitQ]:=MemberQ[$traits[[t1, "Deps"]], t2]
+typeMoreSpecificQ[t1_?traitQ, t2_?traitQ]:=MemberQ[$traits[[t1, "Super"]], t2]
 typeMoreSpecificQ[_?traitQ, None]:=True
 typeMoreSpecificQ[ptype_[param1__], ptype_[param2__]]:=And@@MapThread[typeMoreSpecificQ, {{param1}, {param2}}]
 typeMoreSpecificQ[_, _]:=False
@@ -213,7 +213,7 @@ checkTraitName[trait_]:=If[!traitQ[trait],
   GeneralUtilities`ThrowFailure[ImplementIterator::trait, trait]
 ]
 checkTraitDeps[type_, trait_]:=Block[
-  {mdeps=Select[$traits[[trait, "Deps"]], !traitImplQ[type, #]&]},
+  {mdeps=Select[$traits[[trait, "Super"]], !traitImplQ[type, #]&]},
   If[mdeps=!={},
     GeneralUtilities`ThrowFailure[ImplementIterator::mdeps, trait, mdeps]
   ]
