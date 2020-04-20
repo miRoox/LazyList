@@ -1,4 +1,4 @@
-name: Test
+name: CI
 on: 
   push:
     paths-ignore:
@@ -10,6 +10,13 @@ jobs:
     steps:
     - name: Checkout
       uses: actions/checkout@v1
+    - name: Build
+      uses: miRoox/wolfram-action@master
+      with:
+        file: Build.wls
+      env:
+        WOLFRAM_ID: ${{ secrets.WolframID }}
+        WOLFRAM_PASS: ${{ secrets.WolframPW }}
     - name: Run Tests
       uses: miRoox/wolfram-action@master
       with:
