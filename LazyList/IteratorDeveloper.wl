@@ -18,10 +18,6 @@ GeneralUtilities`SetUsage[ImplementIterator,
   "ImplementIterator[type$, trait$] implememt trait$ for the iterator type$.",
   "ImplementIterator[type$, methods$] implememt the iterator type$ with the methods$."
 ];
-GeneralUtilities`SetUsage[IteratorTraitInfo,
-  "IteratorTraitInfo[] gives all iterator traits name.",
-  "IteratorTraitInfo[trait$] show the infomation about trait$."
-];
 GeneralUtilities`SetUsage[IteratorSetupArgumentsCheck,
   "IteratorSetupArgumentsCheck[type$, argnum$, num$] throws an error if argnum$ and num$ are not equal.",
   "IteratorSetupArgumentsCheck[type$, argnum$, {min$, max$}] throws an error if argnum$ is not between min$ and max$."
@@ -36,7 +32,6 @@ $IteratorData::usage="$IteratorData is a placeholder to access the data of the i
 
 SetAttributes[DeclareIterator, ReadProtected];
 SetAttributes[ImplementIterator, ReadProtected];
-SetAttributes[IteratorTraitInfo, ReadProtected];
 SetAttributes[IteratorSetupArgumentsCheck, ReadProtected];
 SetAttributes[DynamicIteratorItem, HoldFirst];
 
@@ -49,14 +44,12 @@ ImplementIterator::trait="Unknown trait named `1`.";
 ImplementIterator::mdeps="The dependencies `2` for `1` is missing.";
 ImplementIterator::require="The method `1` is required.";
 ImplementIterator::nfor="The method `1` is not for trait `2`.";
-IteratorTraitInfo::trait="Unknown trait named `1`.";
 
 Begin["`Iterator`Private`"];
 
 $traits = <|
   "Any" -> <|
     "Deps" -> {},
-    "Info" -> "Base trait for all iterators.",
     "Methods" -> {
       "Setup"[args___] :> IteratorSetupArgumentsCheck[$IteratorType, Length@{args}, 0],
       "Dispose"[] :> Null,
@@ -68,14 +61,12 @@ $traits = <|
   |>,
   "Copyable" -> <|
     "Deps" -> {"Any"},
-    "Info" -> "Copyable iterators.",
     "Methods" -> {
       "Copy"[] :> Module[{$data=$IteratorData}, System`Private`SetNoEntry@Iterator[$IteratorType, $data]]
     }
   |>,
   "Forward" -> <|
     "Deps" -> {"Any"},
-    "Info" -> "Forward iterators.",
     "Methods" -> {
       "Next"[] -> Undefined,
       "SizeHint"[] :> Interval[{0,Infinity}],
@@ -85,21 +76,18 @@ $traits = <|
   |>,
   "Peekable" -> <|
     "Deps" -> {"Any", "Forward"},
-    "Info" -> "Peekable iterators.",
     "Methods" -> {
       "Peek"[] -> Undefined
     }
   |>,
   "Bidirectional" -> <|
     "Deps" -> {"Any", "Forward"},
-    "Info" -> "Bidirectional iterators.",
     "Methods" -> {
       "Previous"[] -> Undefined
     }
   |>,
   "ExactSize" -> <|
     "Deps" -> {"Any", "Forward"},
-    "Info" -> "Exact size iterators.",
     "Methods" -> {
       "Length"[] :> Block[
         {len=$IteratorSelf@"SizeHint"[]},
@@ -120,13 +108,6 @@ defaultCollect[iter_Iterator]:=Block[
     Internal`StuffBag[bag,next]
   ];
   Internal`BagPart[bag,All]
-]
-
-IteratorTraitInfo[]:=Keys[$traits]
-IteratorTraitInfo[trait_]:=GeneralUtilities`CatchFailureAndMessage[
-  ResourceFunction["NestedLookup"][$traits, {trait, "Info"},
-    GeneralUtilities`ThrowFailure[IteratorTraitInfo::trait, trait]
-  ]
 ]
 
 $types=<||>;
