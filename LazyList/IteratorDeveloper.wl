@@ -93,7 +93,8 @@ $traits = <|
         {len=$IteratorSelf@"SizeHint"[]},
         Assert@MatchQ[len,_Integer?NonNegative];
         len
-      ]
+      ],
+      "Collect"[] :> Table[$IteratorSelf@"Next"[], $IteratorSelf@"SizeHint"[]]
     }
   |>
 |>;
