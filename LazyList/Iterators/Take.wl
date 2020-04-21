@@ -33,8 +33,8 @@ ImplementIterator["Take"["ExactSize"], "Forward", {
 ImplementIterator["Take"["ExactSize"], "ExactSize"]
 
 SetAttributes[setup, HoldFirst];
-setup[data_, delegate_, n_]:=(
-  data@"Iter"=delegate;
+setup[data_, iter_, n_]:=(
+  data@"Iter"=iter;
   data@"Count"=n;
 )
 setup[_, args___]:=IteratorSetupArgumentsCheck["Take", Length@{args}, 2]
