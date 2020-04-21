@@ -62,6 +62,51 @@ VerificationTest[
 
 EndTestSection[]
 
+BeginTestSection["Once"]
+
+VerificationTest[
+  CreateIterator["Once"]
+  ,
+  $Failed
+  ,
+  {CreateIterator::cargx}
+  ,
+  TestID->"Once-iterator-construct-failed-0"
+]
+
+VerificationTest[
+  CreateIterator["Once", 2, 5]
+  ,
+  $Failed
+  ,
+  {CreateIterator::cargx}
+  ,
+  TestID->"Once-iterator-construct-failed-2"
+]
+
+VerificationTest[
+  Block[{i=CreateIterator["Once", 1]},
+    Read@i
+  ]
+  ,
+  1
+  ,
+  TestID->"Once-iterator-next-once"
+]
+
+VerificationTest[
+  Block[{i=CreateIterator["Once", 1]},
+    Read@i;
+    Read@i
+  ]
+  ,
+  Nothing
+  ,
+  TestID->"Once-iterator-next-twice"
+]
+
+EndTestSection[]
+
 EndTestSection[]
 
 BeginTestSection["LazyRange"]
