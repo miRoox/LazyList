@@ -15,12 +15,15 @@ If[!TrueQ@$CloudConnected,
 
 $baseDir=DirectoryName[$InputFileName]
 
-AppendTo[$Path, $baseDir];
-If[$VersionNumber>=12.1,
-  System`PacletDirectoryLoad[FileNameJoin@{$baseDir, "LazyList"}];
-  System`PacletDataRebuild[],
-  PacletManager`PacletDirectoryAdd[FileNameJoin@{$baseDir, "LazyList"}];
-  PacletManager`RebuildPacletData[]
+If[FailureQ@Environment["PACLET_PATH"],
+  AppendTo[$Path, $baseDir];
+  If[$VersionNumber>=12.1,
+    System`PacletDirectoryLoad[FileNameJoin@{$baseDir, "LazyList"}];
+    System`PacletDataRebuild[],
+    PacletManager`PacletDirectoryAdd[FileNameJoin@{$baseDir, "LazyList"}];
+    PacletManager`RebuildPacletData[]
+  ],
+  PacletInstall[Environment["PACLET_PATH"]]
 ]
 
 Needs["LazyList`"]

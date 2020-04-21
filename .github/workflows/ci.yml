@@ -25,6 +25,7 @@ jobs:
       env:
         WOLFRAM_ID: ${{ secrets.WolframID }}
         WOLFRAM_PASS: ${{ secrets.WolframPW }}
+        PACLET_PATH: ${{ steps.build.outputs.path }}
     - name: Create Release
       if: startsWith(github.event.ref, 'refs/tags/v')
       id: create_release
