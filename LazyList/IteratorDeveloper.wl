@@ -118,7 +118,7 @@ instantiatedTypeQ[t_]:=KeyExistsQ[$types, t]
 
 traitImplQ[_, _]:=False
 
-GeneralUtilities`BlockProtected[{IteratorTypeMatchQ},
+ResourceFunction["BlockProtected"][{IteratorTypeMatchQ},
   IteratorTypeMatchQ[iter:Iterator[itype_,_Symbol]/;System`Private`HoldNoEntryQ[iter], type_]:=typeMatchQ[itype, type]
 ]
 
@@ -157,7 +157,7 @@ instantiateType[type: _[params__]]:=Block[{cands},
   ];
 ]
 
-GeneralUtilities`BlockProtected[{CreateIterator},
+ResourceFunction["BlockProtected"][{CreateIterator},
   CreateIterator[type_, args___]:=GeneralUtilities`CatchFailureAndMessage[
     instantiateType[type];
     Module[
@@ -220,7 +220,7 @@ checkTraitDeps[type_, trait_]:=Block[
   ]
 ]
 
-doImplMethods[type_, methods_]:=GeneralUtilities`BlockProtected[{Iterator},
+doImplMethods[type_, methods_]:=ResourceFunction["BlockProtected"][{Iterator},
   Activate[substImplMethods[type]/@methods, SetDelayed]
 ]
 substImplMethods[type_][Rule[lhs_, Undefined]]:=GeneralUtilities`ThrowFailure[ImplementIterator::require, lhs]
