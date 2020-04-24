@@ -80,6 +80,13 @@ $traits = <|
       "Peek"[] -> Undefined
     }
   |>,
+  "DoubleEnded" -> <|
+    "Super" -> {"Any", "Forward"},
+    "Methods" -> {
+      "NextBack"[] -> Undefined,
+      "Reverse"[] :> CreateIterator["Reverse"[$IteratorType], MoveIterator@$IteratorSelf]
+    }
+  |>,
   "Bidirectional" -> <|
     "Super" -> {"Any", "Forward"},
     "Methods" -> {
