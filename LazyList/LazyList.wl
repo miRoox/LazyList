@@ -75,6 +75,8 @@ Iterator[type_,_][method_[params___]]:=GeneralUtilities`CatchFailureAndMessage[
 Iterator/:Normal[iter_Iterator]:=iter@"Collect"[]
 Iterator/:ReadList[iter_Iterator]:=iter@"Collect"[]
 Iterator/:Read[iter_Iterator]:=iter@"Next"[]
+Iterator/:Equal[lhs_Iterator, rhs_Iterator]:=lhs@"Equal"[rhs]
+Iterator/:Equal[iters__Iterator]:=AllTrue[MovingMap[Apply[Equal], {iters}, 2]]
 Iterator/:MakeBoxes[iter:HoldPattern@Iterator[type_, data_]?System`Private`NoEntryQ, fmt_] /; BoxForm`UseIcons := Module[
   {items=iter@"SummaryItems"[],alwaysGrids,sometimesGrids={}},
   If[AssociationQ[items],
