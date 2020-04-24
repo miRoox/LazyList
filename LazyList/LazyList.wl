@@ -109,6 +109,8 @@ iteratorIcon=Graphics[
   PlotRange -> {{-1, 1}, {-1, 1}}
 ];
 
+CreateIterator[HoldPattern@LazyRange[start_, stop_, step_]]:=CreateIterator["Range", start, stop, step]
+
 MoveIterator[iter:HoldPattern@Iterator[type_, data_Symbol?AssociationQ]]:=Module[
   {$data = data},
   Remove[data];
@@ -177,15 +179,18 @@ LazyRange/:Take[r_LazyRange, {m_Integer, n_Integer, s_Integer}]:=GeneralUtilitie
 LazyRange/:Reverse[HoldPattern@LazyRange[start_, stop_, step_]]:=LazyRange[stop, start, -step]
 
 LazyRange/:MakeBoxes[r:HoldPattern@LazyRange[start_, stop_, step_]/;System`Private`HoldNoEntryQ[r], fmt_]:=Module[
-  {alwaysGrids,sometimesGrids},
+  {alwaysGrids},
   alwaysGrids={
-    BoxForm`SummaryItem@{"Start: ", start},
-    BoxForm`SummaryItem@{"Stop: ", stop}
+    {
+      BoxForm`SummaryItem@{"From: ", start},
+      BoxForm`SummaryItem@{"To: ", stop}
+    },
+    {
+      BoxForm`SummaryItem@{"Step: ", step},
+      SpanFromLeft
+    }
   };
-  sometimesGrids={
-    BoxForm`SummaryItem@{"Step: ", step}
-  };
-  BoxForm`ArrangeSummaryBox[LazyRange,r,None,alwaysGrids,sometimesGrids,fmt]
+  BoxForm`ArrangeSummaryBox[LazyRange,r,None,alwaysGrids,{},fmt]
 ]
 
 rangeCollinearQ[start_, stop_, step_?PossibleZeroQ]:=TrueQ[start==stop]
