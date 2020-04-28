@@ -53,7 +53,7 @@ $traits = <|
     "Methods" -> {
       "Setup"[args___] :> IteratorSetupArgumentsCheck[$IteratorType, Length@{args}, 0],
       "Dispose"[] :> Null,
-      "Equal"[HoldPattern@Iterator[type_, data_]]:=type==$IteratorType&&data==$IteratorData,
+      "Equal"[HoldPattern@Iterator[type_, data_]] :> type==$IteratorType&&data==$IteratorData,
       "SummaryItems"[] :> <|
         "Type: " -> $IteratorType,
         "Dropped: " -> Dynamic[!ValueQ@$IteratorData]
