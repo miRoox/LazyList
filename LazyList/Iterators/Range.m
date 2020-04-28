@@ -46,7 +46,6 @@ ImplementIterator["Range", "DoubleEnded", {
 }]
 
 ImplementIterator["Range", "Copyable"]
-ImplementIterator["Range", "ExactSize"]
 
 SetAttributes[setup, HoldFirst];
 setup[data_, start_|PatternSequence[], stop_|PatternSequence[], step_|PatternSequence[]]:=ResourceFunction["WithMessageHandler"][
