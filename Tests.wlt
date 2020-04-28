@@ -117,6 +117,106 @@ VerificationTest[
 
 EndTestSection[]
 
+BeginTestSection["Range"]
+
+VerificationTest[
+  CreateIterator["Range", 1, 2, 3, 4]
+  ,
+  $Failed
+  ,
+  {CreateIterator::cargb}
+  ,
+  TestID->"Range-iterator-construct-failed-4"
+]
+
+VerificationTest[
+  CreateIterator["Range"]
+  ,
+  CreateIterator["Range", 1, Infinity, 1]
+  ,
+  SameTest->Equal
+  ,
+  TestID->"Range-iterator-construct-0"
+]
+
+VerificationTest[
+  CreateIterator["Range", 100]
+  ,
+  CreateIterator["Range", 1, 100, 1]
+  ,
+  SameTest->Equal
+  ,
+  TestID->"Range-iterator-construct-1"
+]
+
+VerificationTest[
+  CreateIterator["Range", -100, Infinity]
+  ,
+  CreateIterator["Range", -100, Infinity, 1]
+  ,
+  SameTest->Equal
+  ,
+  TestID->"Range-iterator-construct-2"
+]
+
+VerificationTest[
+  CreateIterator["Range", -Infinity, 1]
+  ,
+  CreateIterator["Range", -Infinity, 1, 1]
+  ,
+  SameTest->Equal
+  ,
+  TestID->"Range-iterator-construct-2-inf"
+]
+
+VerificationTest[
+  Block[{i=CreateIterator["Range"]},
+    i@"Next"
+  ]
+  ,
+  1
+  ,
+  TestID->"Range-iterator-next"
+]
+
+VerificationTest[
+  Block[{i=CreateIterator["Range"]},
+    i@"Next";
+    i
+  ]
+  ,
+  CreateIterator["Range", 2, Infinity]
+  ,
+  SameTest->Equal
+  ,
+  TestID->"Range-iterator-next-it"
+]
+
+VerificationTest[
+  Block[{i=CreateIterator["Range", 100]},
+    i@"Collect"
+  ]
+  ,
+  Range[100]
+  ,
+  TestID->"Range-iterator-collect"
+]
+
+VerificationTest[
+  Block[{i=CreateIterator["Range", 100]},
+    i@"Collect";
+    i
+  ]
+  ,
+  CreateIterator["Range", 101, 100]
+  ,
+  SameTest->Equal
+  ,
+  TestID->"Range-iterator-collect-it"
+]
+
+EndTestSection[]
+
 BeginTestSection["Successors"]
 
 VerificationTest[
