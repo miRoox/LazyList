@@ -25,7 +25,11 @@ ImplementIterator["Range", "Forward", {
     ]
   ],
   "SizeHint"[] :> Quotient[$IteratorData[["Stop"]]-$IteratorData[["Start"]], $IteratorData[["Step"]]]+1,
-  "Collect"[] :> Range[$IteratorData[["Start"]], $IteratorData[["Stop"]], $IteratorData[["Step"]]]
+  "Collect"[] :> Block[
+    {list=Range[$IteratorData[["Start"]], $IteratorData[["Stop"]], $IteratorData[["Step"]]]},
+    $IteratorData[["Start"]]=$IteratorData[["Stop"]]+$IteratorData[["Step"]];
+    list
+  ]
 }]
 
 ImplementIterator["Range", "Peekable", {
