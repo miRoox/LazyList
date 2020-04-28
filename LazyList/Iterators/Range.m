@@ -10,35 +10,35 @@ ImplementIterator["Range", "Any", {
   "Setup"[args___] :> setup[$IteratorData, args],
   "SummaryItems"[] :> <|
     "Type: " -> $IteratorType,
-    "From: " -> DynamicIteratorItem@Dynamic[$IteratorSelf[["Start"]]],
-    "To: " -> DynamicIteratorItem@Dynamic[$IteratorSelf[["Stop"]]],
-    "Step: " -> $IteratorSelf[["Step"]]
+    "From: " -> DynamicIteratorItem@Dynamic[$IteratorData[["Start"]]],
+    "To: " -> DynamicIteratorItem@Dynamic[$IteratorData[["Stop"]]],
+    "Step: " -> $IteratorData[["Step"]]
   |>
 }]
 
 ImplementIterator["Range", "Forward", {
-  "Next"[] :> Block[{item=$IteratorSelf[["Start"]]},
-    If[item <= $IteratorSelf[["Stop"]],
-      $IteratorSelf[["Start"]] += $IteratorSelf[["Step"]];
+  "Next"[] :> Block[{item=$IteratorData[["Start"]]},
+    If[item <= $IteratorData[["Stop"]],
+      $IteratorData[["Start"]] += $IteratorData[["Step"]];
       item,
       Nothing
     ]
   ],
-  "SizeHint"[] :> Quotient[$IteratorSelf[["Stop"]]-$IteratorSelf[["Start"]], $IteratorSelf[["Step"]]]+1,
-  "Collect"[] :> Range[$IteratorSelf[["Start"]], $IteratorSelf[["Stop"]], $IteratorSelf[["Step"]]]
+  "SizeHint"[] :> Quotient[$IteratorData[["Stop"]]-$IteratorData[["Start"]], $IteratorData[["Step"]]]+1,
+  "Collect"[] :> Range[$IteratorData[["Start"]], $IteratorData[["Stop"]], $IteratorData[["Step"]]]
 }]
 
 ImplementIterator["Range", "Peekable", {
-  "Peek"[] :> If[$IteratorSelf[["Start"]] <= $IteratorSelf[["Stop"]],
-    $IteratorSelf[["Start"]],
+  "Peek"[] :> If[$IteratorData[["Start"]] <= $IteratorData[["Stop"]],
+    $IteratorData[["Start"]],
     Nothing
   ]
 }]
 
 ImplementIterator["Range", "DoubleEnded", {
-  "NextBack"[] :> Block[{item=$IteratorSelf[["Stop"]]},
-    If[$IteratorSelf[["Start"]] <= item,
-      $IteratorSelf[["Stop"]] -= $IteratorSelf[["Step"]];
+  "NextBack"[] :> Block[{item=$IteratorData[["Stop"]]},
+    If[$IteratorData[["Start"]] <= item,
+      $IteratorData[["Stop"]] -= $IteratorData[["Step"]];
       item,
       Nothing
     ]
