@@ -12,14 +12,14 @@ jobs:
       uses: actions/checkout@v1
     - name: Build
       id: build
-      uses: miRoox/wolfram-action@master
+      uses: miRoox/wolfram-action@v1
       with:
         file: Build.wls
       env:
         WOLFRAM_ID: ${{ secrets.WolframID }}
         WOLFRAM_PASS: ${{ secrets.WolframPW }}
     - name: Run Tests
-      uses: miRoox/wolfram-action@master
+      uses: miRoox/wolfram-action@v1
       with:
         file: RunTests.wls
       env:
