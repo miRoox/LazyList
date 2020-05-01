@@ -18,7 +18,7 @@ ImplementIterator["Range", "Any", {
 
 ImplementIterator["Range", "Forward", {
   "Next"[] :> Block[{item=$IteratorData[["Start"]]},
-    If[item <= $IteratorData[["Stop"]],
+    If[(item - $IteratorData[["Stop"]])*$IteratorData[["Step"]] <= 0,
       $IteratorData[["Start"]] += $IteratorData[["Step"]];
       item,
       Nothing
@@ -41,7 +41,7 @@ ImplementIterator["Range", "Peekable", {
 
 ImplementIterator["Range", "DoubleEnded", {
   "NextBack"[] :> Block[{item=$IteratorData[["Stop"]]},
-    If[$IteratorData[["Start"]] <= item,
+    If[($IteratorData[["Start"]] - item)*$IteratorData[["Step"]] <= 0,
       $IteratorData[["Stop"]] -= $IteratorData[["Step"]];
       item,
       Nothing
