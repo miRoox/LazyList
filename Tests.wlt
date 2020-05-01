@@ -215,6 +215,29 @@ VerificationTest[
   TestID->"Range-iterator-collect-it"
 ]
 
+VerificationTest[
+  Block[{i=CreateIterator["Range", Infinity, 1, -1]},
+    i@"NextBack"
+  ]
+  ,
+  1
+  ,
+  TestID->"Range-iterator-nextback"
+]
+
+VerificationTest[
+  Block[{i=CreateIterator["Range", Infinity, 1, -1]},
+    i@"NextBack";
+    i
+  ]
+  ,
+  CreateIterator["Range", Infinity, 2, -1]
+  ,
+  SameTest->Equal
+  ,
+  TestID->"Range-iterator-nextback-it"
+]
+
 EndTestSection[]
 
 BeginTestSection["Successors"]
