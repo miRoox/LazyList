@@ -13,8 +13,8 @@ GeneralUtilities`SetUsage[Iterator,
   "Iterator[type$, data$] represents a iterator object."
 ];
 GeneralUtilities`SetUsage[CreateIterator,
-  "CreateIterator[expr$] creates a new iterator object from expr$.",
-  "CreateIterator[type$, args$$] creates a new iterator object."
+  "CreateIterator[iterable$] creates a new iterator object from iterable$.",
+  "CreateIterator[type$, args$$] creates a new iterator object of the given type$."
 ];
 GeneralUtilities`SetUsage[MoveIterator,
   "MoveIterator[iter$] move the ownership of iter$ to a new iterator."
@@ -25,6 +25,9 @@ GeneralUtilities`SetUsage[IteratorTypeMatchQ,
 ];
 GeneralUtilities`SetUsage[IteratorTypeOf,
   "IteratorTypeOf[iterator$] returns the iterator$ type name."
+];
+GeneralUtilities`SetUsage[IterableQ,
+  "IterableQ[expr$] returns True if expr$ is iterable, and return False otherwise."
 ];
 GeneralUtilities`SetUsage[LazyRange,
   "LazyRange[] constructs a range from 1 to \[Infinity] with a step size of 1.",
@@ -111,7 +114,18 @@ iteratorIcon=Graphics[
   PlotRange -> {{-1, 1}, {-1, 1}}
 ];
 
-CreateIterator[HoldPattern@LazyRange[start_, stop_, step_]]:=CreateIterator["Range", start, stop, step]
+$iterables={
+  HoldPattern@LazyRange[start_, stop_, step_]:>CreateIterator["Range", start, stop, step],
+  HoldPattern@IgnoringInactive@Range[stop_]:>CreateIterator["Range", stop],
+  HoldPattern@IgnoringInactive@Range[start_, stop_]:>CreateIterator["Range", start, stop],
+  HoldPattern@IgnoringInactive@Range[start_, stop_, step_]:>CreateIterator["Range", start, stop, step]
+};
+
+IterableQ[expr_]:=AnyTrue[$iterables, MatchQ[expr,#[[1]]]&]
+
+CreateIterator[iterable_]:=With[{iter=Replace[iterable, $iterables]},
+  iter/;MatchQ[iter, _Iterator]
+]
 
 MoveIterator[iter:HoldPattern@Iterator[type_, data_Symbol?AssociationQ]]:=Module[
   {$data = data},
