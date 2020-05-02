@@ -54,7 +54,7 @@ ImplementIterator["Range", "Copyable"]
 SetAttributes[setup, HoldFirst];
 setup[data_, start_|PatternSequence[], stop_|PatternSequence[], step_|PatternSequence[]]:=ResourceFunction["WithMessageHandler"][
   isetup[data, LazyRange[start, stop, step]],
-  Throw
+  GeneralUtilities`ThrowRawFailure
 ]
 setup[_, args__]:=IteratorSetupArgumentsCheck["Range", Length@{args}, {0, 3}]
 SetAttributes[isetup, HoldFirst];
