@@ -47,6 +47,17 @@ ImplementIterator::nfor="The method `1` is not for trait `2`.";
 
 Begin["`Iterator`Private`"];
 
+$iterables={
+  HoldPattern@LazyRange[start_, stop_, step_]:>CreateIterator["Range", start, stop, step],
+  HoldPattern@IgnoringInactive@Range[stop_]:>CreateIterator["Range", stop],
+  HoldPattern@IgnoringInactive@Range[start_, stop_]:>CreateIterator["Range", start, stop],
+  HoldPattern@IgnoringInactive@Range[start_, stop_, step_]:>CreateIterator["Range", start, stop, step]
+};
+
+ResourceFunction["BlockProtected"][{IterableQ},
+  IterableQ[expr_]:=AnyTrue[$iterables, MatchQ[expr,#[[1]]]&]
+]
+
 $traits = <|
   "Any" -> <|
     "Super" -> {},
@@ -177,6 +188,9 @@ ResourceFunction["BlockProtected"][{CreateIterator},
         iter
       ]
     ]
+  ];
+  CreateIterator[iterable_]:=With[{iter=Replace[iterable, $iterables]},
+    iter/;MatchQ[iter, _Iterator]
   ]
 ]
 

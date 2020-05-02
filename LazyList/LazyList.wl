@@ -41,6 +41,7 @@ SetAttributes[CreateIterator, ReadProtected];
 SetAttributes[MoveIterator, ReadProtected];
 SetAttributes[IteratorTypeMatchQ, ReadProtected];
 SetAttributes[IteratorTypeOf, ReadProtected];
+SetAttributes[IterableQ, ReadProtected];
 SetAttributes[LazyRange, ReadProtected];
 
 SyntaxInformation[Iterator]={"ArgumentsPattern" -> {_, _}};
@@ -48,6 +49,7 @@ SyntaxInformation[CreateIterator]={"ArgumentsPattern" -> {_, ___}};
 SyntaxInformation[MoveIterator]={"ArgumentsPattern" -> {_}};
 SyntaxInformation[IteratorTypeMatchQ]={"ArgumentsPattern" -> {_, _.}};
 SyntaxInformation[IteratorTypeOf]={"ArgumentsPattern" -> {_}};
+SyntaxInformation[IterableQ]={"ArgumentsPattern" -> {_}};
 SyntaxInformation[LazyRange]={"ArgumentsPattern" -> {_., _., _.}};
 
 Iterator::nmethod="`1` is not a known method with `2` parameters for the iterator of type `3`.";
@@ -113,19 +115,6 @@ iteratorIcon=Graphics[
   ImageSize -> 29.4,
   PlotRange -> {{-1, 1}, {-1, 1}}
 ];
-
-$iterables={
-  HoldPattern@LazyRange[start_, stop_, step_]:>CreateIterator["Range", start, stop, step],
-  HoldPattern@IgnoringInactive@Range[stop_]:>CreateIterator["Range", stop],
-  HoldPattern@IgnoringInactive@Range[start_, stop_]:>CreateIterator["Range", start, stop],
-  HoldPattern@IgnoringInactive@Range[start_, stop_, step_]:>CreateIterator["Range", start, stop, step]
-};
-
-IterableQ[expr_]:=AnyTrue[$iterables, MatchQ[expr,#[[1]]]&]
-
-CreateIterator[iterable_]:=With[{iter=Replace[iterable, $iterables]},
-  iter/;MatchQ[iter, _Iterator]
-]
 
 MoveIterator[iter:HoldPattern@Iterator[type_, data_Symbol?AssociationQ]]:=Module[
   {$data = data},
