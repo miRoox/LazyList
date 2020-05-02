@@ -28,11 +28,11 @@ ImplementIterator["Successors", "Forward", {
   "SizeHint"[] :> If[$IteratorData[["Next"]]===Nothing, 0, Interval[{1,Infinity}]]
 }]
 
-ImplementIterator["Empty", "Peekable", {
+ImplementIterator["Successors", "Peekable", {
   "Peek"[] :> $IteratorData[["Next"]]
 }]
 
-ImplementIterator["Empty", "Copyable"]
+ImplementIterator["Successors", "Copyable"]
 
 SetAttributes[setup, HoldFirst];
 setup[data_, succ_, init_]:=(
