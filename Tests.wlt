@@ -130,6 +130,16 @@ VerificationTest[
 ]
 
 VerificationTest[
+  CreateIterator["Range", I, 4I]
+  ,
+  $Failed
+  ,
+  {LazyRange::range}
+  ,
+  TestID->"Range-iterator-construct-failed-range"
+]
+
+VerificationTest[
   CreateIterator["Range"]
   ,
   CreateIterator["Range", 1, Infinity, 1]
@@ -140,7 +150,7 @@ VerificationTest[
 ]
 
 VerificationTest[
-  CreateIterator["Range", 100]
+  CreateIterator["Range", 100.5]
   ,
   CreateIterator["Range", 1, 100, 1]
   ,
@@ -150,13 +160,23 @@ VerificationTest[
 ]
 
 VerificationTest[
+  CreateIterator["Range", -1/2, 17/5]
+  ,
+  CreateIterator["Range", -1/2, 5/2, 1]
+  ,
+  SameTest->Equal
+  ,
+  TestID->"Range-iterator-construct-2"
+]
+
+VerificationTest[
   CreateIterator["Range", -100, Infinity]
   ,
   CreateIterator["Range", -100, Infinity, 1]
   ,
   SameTest->Equal
   ,
-  TestID->"Range-iterator-construct-2"
+  TestID->"Range-iterator-construct-2-inf"
 ]
 
 VerificationTest[
@@ -166,7 +186,77 @@ VerificationTest[
   ,
   SameTest->Equal
   ,
-  TestID->"Range-iterator-construct-2-inf"
+  TestID->"Range-iterator-construct-2-ninf"
+]
+
+VerificationTest[
+  CreateIterator[Inactivate@Range[100.5]]
+  ,
+  CreateIterator["Range", 1, 100, 1]
+  ,
+  SameTest->Equal
+  ,
+  TestID->"Range-iterator-Range-construct-1"
+]
+
+VerificationTest[
+  CreateIterator[Inactive[Range][-1/2, 17/5]]
+  ,
+  CreateIterator["Range", -1/2, 5/2, 1]
+  ,
+  SameTest->Equal
+  ,
+  TestID->"Range-iterator-Range-construct-2"
+]
+
+VerificationTest[
+  CreateIterator[Inactive[Range][-100, Infinity]]
+  ,
+  CreateIterator["Range", -100, Infinity, 1]
+  ,
+  SameTest->Equal
+  ,
+  TestID->"Range-iterator-Range-construct-2-inf"
+]
+
+VerificationTest[
+  CreateIterator[Inactive[Range][-Infinity, 1]]
+  ,
+  CreateIterator["Range", -Infinity, 1, 1]
+  ,
+  SameTest->Equal
+  ,
+  TestID->"Range-iterator-Range-construct-2-ninf"
+]
+
+VerificationTest[
+  CreateIterator[Inactive[Range][-100, Infinity, 2]]
+  ,
+  CreateIterator["Range", -100, Infinity, 2]
+  ,
+  SameTest->Equal
+  ,
+  TestID->"Range-iterator-Range-construct-3-inf"
+]
+
+VerificationTest[
+  CreateIterator[Inactive[Range][Infinity, 1, -1]]
+  ,
+  CreateIterator["Range", Infinity, 1, -1]
+  ,
+  SameTest->Equal
+  ,
+  TestID->"Range-iterator-Range-construct-3-rinf"
+]
+
+VerificationTest[
+  CreateIterator[LazyRange[-100, Infinity, 2]]
+  ,
+  CreateIterator["Range", -100, Infinity, 2]
+  ,
+  SameTest->Equal
+  ,
+  TestID->"Range-iterator-LazyRange-construct"
 ]
 
 VerificationTest[
