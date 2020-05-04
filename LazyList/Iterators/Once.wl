@@ -25,6 +25,10 @@ ImplementIterator["Once", "Peekable", {
 ImplementIterator["Once", "Copyable"]
 ImplementIterator["Once", "ExactSize"]
 
+ImplementIterator["Constant", "DoubleEnded", {
+  "NextBack"[] :> move[$IteratorData[["Element"]]]
+}]
+
 SetAttributes[move, HoldFirst];
 move[val_]:=Block[{tmp=val},
   val=Nothing;

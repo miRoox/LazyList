@@ -14,6 +14,10 @@ ImplementIterator["Empty", "Peekable", {
   "Peek"[] :> Nothing
 }]
 
+ImplementIterator["Empty", "DoubleEnded", {
+  "NextBack"[] :> Nothing
+}]
+
 ImplementIterator["Empty", "Bidirectional", {
   "Previous"[] :> Nothing
 }]

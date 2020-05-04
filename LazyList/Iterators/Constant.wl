@@ -19,6 +19,10 @@ ImplementIterator["Constant", "Peekable", {
   "Peek"[] :> $IteratorData[["Element"]]
 }]
 
+ImplementIterator["Constant", "DoubleEnded", {
+  "NextBack"[] :> $IteratorData[["Element"]]
+}]
+
 ImplementIterator["Constant", "Bidirectional", {
   "Previous"[] :> $IteratorData[["Element"]]
 }]
