@@ -83,7 +83,8 @@ $traits = <|
       "Next"[] -> Undefined,
       "SizeHint"[] :> Interval[{0,Infinity}],
       "Collect"[] :> defaultCollect[$IteratorSelf],
-      "Take"[n_Integer?NonNegative] :> CreateIterator["Take"[$IteratorType], MoveIterator@$IteratorSelf, n]
+      "Take"[n_Integer?NonNegative] :> CreateIterator["Take"[$IteratorType], MoveIterator@$IteratorSelf, n],
+      "TakeWhile"[pred_] :> CreateIterator["TakeWhile"[$IteratorType], MoveIterator@$IteratorSelf, pred]
     }
   |>,
   "Peekable" -> <|
