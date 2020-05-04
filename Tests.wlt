@@ -372,6 +372,26 @@ VerificationTest[
   TestID->"Successors-iterator-consume"
 ]
 
+VerificationTest[
+  Block[{i=CreateIterator["Successors", 4*#*(1 - #) &, 0.3]@"Take"[10]},
+    Normal@i
+  ]
+  ,
+  NestList[4*#*(1 - #) &, 0.3, 9]
+  ,
+  TestID->"Successors-iterator-take"
+]
+
+VerificationTest[
+  Block[{i=CreateIterator["Successors", Log, 100]@"TakeWhile"[Positive]},
+    Normal@i
+  ]
+  ,
+  NestWhileList[Log, 100, Positive, 1, \[Infinity], -1]
+  ,
+  TestID->"Successors-iterator-takewhile"
+]
+
 EndTestSection[]
 
 eginTestSection["Stream"]
