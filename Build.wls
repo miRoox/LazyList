@@ -10,3 +10,5 @@ paclet=If[$VersionNumber>=12.1,
 
 Print["::set-output name=path::", paclet]
 Print["::set-output name=name::", FileNameTake@paclet]
+
+Exit[]
