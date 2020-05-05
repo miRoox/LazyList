@@ -318,6 +318,14 @@ VerificationTest[
   TestID->"Range-iterator-nextback-it"
 ]
 
+VerificationTest[
+  (CreateIterator["Range", 100]@"Select"[Mod[#, 3]==1 && Mod[#, 5]==1 &])@"Collect"
+  ,
+  Range[100]//Select[Mod[#, 3]==1 && Mod[#, 5]==1 &]
+  ,
+  TestID->"Range-iterator-select"
+]
+
 EndTestSection[]
 
 BeginTestSection["Successors"]
