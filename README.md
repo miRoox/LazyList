@@ -9,7 +9,7 @@
 
 *LazyList* package requires Wolfram language version 12 or later.
 
-*TODO*
+For prerelease version, for example, evaluate `PacletInstall["https://github.com/miRoox/LazyList/releases/download/v0.1.0/LazyList-0.1.0.paclet"]` in Mathematica.
 
 ## Usage
 
