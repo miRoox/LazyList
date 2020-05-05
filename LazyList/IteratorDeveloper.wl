@@ -85,7 +85,8 @@ $traits = <|
       "Collect"[] :> defaultCollect[$IteratorSelf],
       "FindNext"[pred_] :> defaultFindNext["Next", $IteratorSelf, pred],
       "Take"[n_Integer?NonNegative] :> CreateIterator["Take"[$IteratorType], MoveIterator@$IteratorSelf, n],
-      "TakeWhile"[pred_] :> CreateIterator["TakeWhile"[$IteratorType], MoveIterator@$IteratorSelf, pred]
+      "TakeWhile"[pred_] :> CreateIterator["TakeWhile"[$IteratorType], MoveIterator@$IteratorSelf, pred],
+      "Select"[pred_] :> CreateIterator["Select"[$IteratorType], MoveIterator@$IteratorSelf, pred]
     }
   |>,
   "Peekable" -> <|
