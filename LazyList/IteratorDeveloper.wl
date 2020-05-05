@@ -83,6 +83,7 @@ $traits = <|
       "Next"[] -> Undefined,
       "SizeHint"[] :> Interval[{0,Infinity}],
       "Collect"[] :> defaultCollect[$IteratorSelf],
+      "FindNext"[pred_] :> defaultFindNext["Next", $IteratorSelf, pred],
       "Take"[n_Integer?NonNegative] :> CreateIterator["Take"[$IteratorType], MoveIterator@$IteratorSelf, n],
       "TakeWhile"[pred_] :> CreateIterator["TakeWhile"[$IteratorType], MoveIterator@$IteratorSelf, pred]
     }
@@ -97,6 +98,7 @@ $traits = <|
     "Super" -> {"Any", "Forward"},
     "Methods" -> {
       "NextBack"[] -> Undefined,
+      "FindNextBack"[pred_] :> defaultFindNext["NextBack", $IteratorSelf, pred],
       "Reverse"[] :> CreateIterator["Reverse"[$IteratorType], MoveIterator@$IteratorSelf]
     }
   |>,
@@ -129,6 +131,13 @@ defaultCollect[iter_Iterator]:=Block[
     Internal`StuffBag[bag,next]
   ];
   Internal`BagPart[bag,All]
+]
+defaultFindNext[op_, iter_Iterator, pred_]:=Block[{next},
+  While[
+    next=iter@op[];
+    next=!=Nothing && pred[next]=!=True
+  ];
+  next
 ]
 
 $types=<||>;
