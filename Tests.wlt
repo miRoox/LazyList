@@ -17,9 +17,7 @@ VerificationTest[
 ]
 
 VerificationTest[
-  Block[{i=CreateIterator["Empty"]},
-    Normal[i]
-  ]
+  CreateIterator["Empty"]@"Collect"
   ,
   {}
   ,
@@ -52,7 +50,7 @@ VerificationTest[
 
 VerificationTest[
   Block[{i=CreateIterator["Constant", 1]},
-    Table[Read@i, 10]
+    Table[i@"Next", 10]
   ]
   ,
   ConstantArray[1, 10]
@@ -86,7 +84,7 @@ VerificationTest[
 
 VerificationTest[
   Block[{i=CreateIterator["Once", 1]},
-    Read@i
+    i@"Next"
   ]
   ,
   1
@@ -96,8 +94,8 @@ VerificationTest[
 
 VerificationTest[
   Block[{i=CreateIterator["Once", 1]},
-    Read@i;
-    Read@i
+    i@"Next";
+    i@"Next"
   ]
   ,
   Nothing
@@ -106,9 +104,7 @@ VerificationTest[
 ]
 
 VerificationTest[
-  Block[{i=CreateIterator["Once", 1]},
-    Normal@i
-  ]
+  CreateIterator["Once", 1]@"Collect"
   ,
   {1}
   ,
@@ -260,9 +256,7 @@ VerificationTest[
 ]
 
 VerificationTest[
-  Block[{i=CreateIterator["Range"]},
-    i@"Next"
-  ]
+  CreateIterator["Range"]@"Next"
   ,
   1
   ,
@@ -283,9 +277,7 @@ VerificationTest[
 ]
 
 VerificationTest[
-  Block[{i=CreateIterator["Range", 100]},
-    i@"Collect"
-  ]
+  CreateIterator["Range", 100]@"Collect"
   ,
   Range[100]
   ,
@@ -306,9 +298,7 @@ VerificationTest[
 ]
 
 VerificationTest[
-  Block[{i=CreateIterator["Range", Infinity, 1, -1]},
-    i@"NextBack"
-  ]
+  CreateIterator["Range", Infinity, 1, -1]@"NextBack"
   ,
   1
   ,
