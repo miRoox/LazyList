@@ -10,6 +10,7 @@ BeginPackage["LazyList`Iterators`", {"LazyList`", "LazyList`Developer`"}];
 <<`Constant`;
 <<`Once`;
 <<`Range`;
+<<`List`;
 <<`Stream`;
 <<`Successors`;
 
