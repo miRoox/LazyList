@@ -1,2 +1,2 @@
 (* Mathematica Init file *)
-Get["LazyList`LazyList`"]
+Get[FileNameJoin@{DirectoryName[$InputFileName, 2], "LazyList.wl"}]
