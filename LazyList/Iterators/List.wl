@@ -44,7 +44,7 @@ ImplementIterator["List", "DoubleEnded", {
 }]
 
 ImplementIterator["List", "Bidirectional", {
-  "NextBack"[] :> If[0 < $IteratorData[["Index"]] < $IteratorData[["Sentinel"]],
+  "Previous"[] :> If[0 < $IteratorData[["Index"]] < $IteratorData[["Sentinel"]],
     $IteratorData[["Data"]][[--$IteratorData[["Index"]]]],
     Nothing
   ]
