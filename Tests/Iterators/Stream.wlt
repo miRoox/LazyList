@@ -1,4 +1,4 @@
-BeginTestSection["Stream"]
+BeginTestSection["StreamIterator"]
 
 VerificationTest[
   CreateIterator["Stream"]

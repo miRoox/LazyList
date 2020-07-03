@@ -1,4 +1,4 @@
-BeginTestSection["Range"]
+BeginTestSection["RangeIterator"]
 
 VerificationTest[
   CreateIterator["Range", 1, 2, 3, 4]

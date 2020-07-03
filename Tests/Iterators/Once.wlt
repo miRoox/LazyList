@@ -1,4 +1,4 @@
-BeginTestSection["Once"]
+BeginTestSection["OnceIterator"]
 
 VerificationTest[
   CreateIterator["Once"]

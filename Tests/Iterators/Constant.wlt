@@ -1,4 +1,4 @@
-BeginTestSection["Constant"]
+BeginTestSection["ConstantIterator"]
 
 VerificationTest[
   CreateIterator["Constant"]

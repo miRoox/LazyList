@@ -1,6 +1,5 @@
 BeginTestSection["LazyList"]
 
-<<"./Tests/Iterators.wlt"
-<<"./Tests/LazyRange.wlt"
+FileSystemScan[Get, FileNameJoin@{DirectoryName@$InputFileName, "Tests"}, Infinity]
 
 EndTestSection[]

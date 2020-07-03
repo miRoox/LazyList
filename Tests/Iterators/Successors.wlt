@@ -1,4 +1,4 @@
-BeginTestSection["Successors"]
+BeginTestSection["SuccessorsIterator"]
 
 VerificationTest[
   CreateIterator["Successors"]

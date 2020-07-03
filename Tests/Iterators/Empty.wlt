@@ -1,4 +1,4 @@
-BeginTestSection["Empty"]
+BeginTestSection["EmptyIterator"]
 
 VerificationTest[
   CreateIterator["Empty", 1]
