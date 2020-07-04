@@ -8,7 +8,10 @@ paclet=If[$VersionNumber>=12.1,
   PacletManager`PackPaclet[$pacletDir]
 ];
 
-Print["::set-output name=path::", paclet]
-Print["::set-output name=name::", FileNameTake@paclet]
+If[FailureQ@paclet,
+  Exit[1],
+  Print["::set-output name=path::", paclet];
+  Print["::set-output name=name::", FileNameTake@paclet];
+]
 
 Exit[]
