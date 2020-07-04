@@ -27,7 +27,10 @@ setup[data_, istream_InputStream, type_.]:=Block[{},
   data[["Stream"]]=istream;
   data[["Type"]]=type;
 ]
-setup[data_, file:(_String|_File), type_.]:=setup[data, OpenRead[file], type]
+setup[data_, file_, type_.]:=ResourceFunction["WithMessageHandler"][
+  setup[data, OpenRead[file], type],
+  GeneralUtilities`ThrowRawFailure
+]
 setup[_, args___]:=IteratorSetupArgumentsCheck["Stream", Length@{args}, {1, 2}]
 
 End[]

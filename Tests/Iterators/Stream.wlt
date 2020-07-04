@@ -11,6 +11,16 @@ VerificationTest[
 ]
 
 VerificationTest[
+  CreateIterator["Stream", 1]
+  ,
+  $Failed
+  ,
+  {OpenRead::noopen}
+  ,
+  TestID->"Stream-iterator-construct-failed-noopen"
+]
+
+VerificationTest[
   CreateIterator["Stream", "Build.wls", Character, 0]
   ,
   $Failed
