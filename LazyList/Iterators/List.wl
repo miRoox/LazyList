@@ -62,7 +62,7 @@ setup[data_, list_List, from_Integer, to_Integer]:=(
   data[["Index"]]=normalize[list, from];
   data[["Sentinel"]]=normalize[list, to]+1;
 )
-setup[_, args__]:=IteratorSetupArgumentsCheck["List", Length@{args}, {1, 3}]
+setup[_, args___]:=IteratorSetupArgumentsCheck["List", Length@{args}, {1, 3}]
 
 normalize[list_, spec_Integer?Positive]:=spec
 normalize[list_, spec_Integer?Negative]:=Length[list]+spec+1
