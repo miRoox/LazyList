@@ -4,6 +4,8 @@ on:
     paths-ignore:
       - README.md
       - LICENSE
+      - .editorconfig
+      - .gitignore
 jobs:
   ci:
     runs-on: ubuntu-latest
