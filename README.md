@@ -14,4 +14,5 @@ For prerelease version, for example, evaluate `PacletInstall["https://github.com
 ## Usage
 
 Basic usage:
+
 ![basic usage](./basic.svg)
