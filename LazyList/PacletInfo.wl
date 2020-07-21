@@ -6,7 +6,7 @@ Paclet[
   Description->"Lazy list utilities",
   Creator->"miRoox <miRoox@outlook.com>",
   URL->"https://github.com/miRoox/LazyList",
-  Loading->Automatic,
+  Loading->Manual,
   Extensions->{
     {"Kernel", Root->"Kernel", Context->"LazyList`",
       Symbols->{
