@@ -1,5 +1,7 @@
 BeginTestSection["SuccessorsIterator"]
 
+Needs["LazyList`"]
+
 VerificationTest[
   CreateIterator["Successors"]
   ,

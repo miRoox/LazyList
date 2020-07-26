@@ -1,5 +1,7 @@
 BeginTestSection["RangeIterator"]
 
+Needs["LazyList`"]
+
 VerificationTest[
   CreateIterator["Range", 1, 2, 3, 4]
   ,

@@ -1,5 +1,7 @@
 BeginTestSection["LazyRange"]
 
+Needs["LazyList`"]
+
 VerificationTest[
   LazyRange[]
   ,

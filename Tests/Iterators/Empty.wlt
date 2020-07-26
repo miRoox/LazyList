@@ -1,5 +1,7 @@
 BeginTestSection["EmptyIterator"]
 
+Needs["LazyList`"]
+
 VerificationTest[
   CreateIterator["Empty", 1]
   ,

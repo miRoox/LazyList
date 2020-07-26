@@ -1,5 +1,7 @@
 BeginTestSection["StreamIterator"]
 
+Needs["LazyList`"]
+
 VerificationTest[
   CreateIterator["Stream"]
   ,
