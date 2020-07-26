@@ -235,5 +235,5 @@ Protect[
 
 EndPackage[] (* LazyList` *)
 
-Get["LazyList`IteratorDeveloper`"]
-Get["LazyList`Iterators`"]
+Get@FileNameJoin@{DirectoryName@$InputFileName, "IteratorDeveloper.wl"};
+Get@FileNameJoin@{DirectoryName@$InputFileName, "Iterators.wl"};
