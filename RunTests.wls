@@ -26,9 +26,13 @@ If[FailureQ@Environment["PACLET_PATH"],
 
 Needs["MUnit`"]
 
-$testFile=FileNameJoin@{$baseDir, "Tests", "Tests.wlt"};
+$testDir=FileNameJoin@{$baseDir, "Tests"};
 
-If[MUnit`TestRun[$testFile, "Loggers" -> {MUnit`VerbosePrintLogger[]}],
+If[
+  AllTrue[
+    FileNames["*.mt"|"*.wlt", $testDir],
+    MUnit`TestRun[#, "Loggers" -> {MUnit`VerbosePrintLogger[]}]&
+  ],
   Exit[],
   Exit[1]
 ]
