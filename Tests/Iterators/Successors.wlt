@@ -43,7 +43,7 @@ VerificationTest[
 ]
 
 VerificationTest[
-  Block[{i=CreateIterator["Successors", 4*#*(1 - #) &, 0.3]@"Take"[10]},
+  Block[{i=CreateIterator["Successors", 4*#*(1 - #) &, 0.3]/*"Take"[10]},
     Normal@i
   ]
   ,
@@ -53,7 +53,7 @@ VerificationTest[
 ]
 
 VerificationTest[
-  Block[{i=CreateIterator["Successors", Log, 100]@"TakeWhile"[Positive]},
+  Block[{i=CreateIterator["Successors", Log, 100]/*"TakeWhile"[Positive]},
     Normal@i
   ]
   ,

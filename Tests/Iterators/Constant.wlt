@@ -32,4 +32,12 @@ VerificationTest[
   TestID->"Constant-iterator-consume"
 ]
 
+VerificationTest[
+  CreateIterator["Constant", 1]/*"Take"[10]/*"Collect"
+  ,
+  ConstantArray[1, 10]
+  ,
+  TestID->"Constant-iterator-take-consume"
+]
+
 EndTestSection[]

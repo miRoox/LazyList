@@ -206,7 +206,9 @@ VerificationTest[
 ]
 
 VerificationTest[
-  (CreateIterator["Range", 100]@"Select"[Mod[#, 3]==1 && Mod[#, 5]==1 &])@"Collect"
+  CreateIterator["Range", 100]
+    /*"Select"[Mod[#, 3]==1 && Mod[#, 5]==1 &]
+    /*"Collect"
   ,
   Range[100]//Select[Mod[#, 3]==1 && Mod[#, 5]==1 &]
   ,

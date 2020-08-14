@@ -77,6 +77,8 @@ iter_Iterator[method_String]:=iter@method[]
 Iterator[type_,_][method_[params___]]:=GeneralUtilities`CatchFailureAndMessage[
   GeneralUtilities`ThrowFailure[Iterator::nmethod, method, Length@{params}, type]
 ]
+pipeline[iter_Iterator, method_]:=iter@method
+Iterator/:RightComposition[iter_Iterator, methods__]:=Fold[pipeline, iter, {methods}]
 Iterator/:Normal[iter_Iterator]:=iter@"Collect"[]
 Iterator/:ReadList[iter_Iterator]:=iter@"Collect"[]
 Iterator/:Read[iter_Iterator]:=iter@"Next"[]
